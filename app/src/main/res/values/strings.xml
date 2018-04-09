@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">PronapMobile</string>
+    <string name="app_name">Pronap Mobile</string>
+
+    <!-- Account String -->
+    <string name="account_proposal">Pas de compte? Créer un nouveau</string>
+    <string name="login">Se Connecter</string>
+    <string name="email">Email</string>
+    <string name="password">Mot de Passe</string>
+    <string name="password_confirmation">Confirmer Mot de Passe</string>
+    <string name="full_name">Nom Complet</string>
+    <string name="register_title">Créer un Compte PRONAP-MOBILE</string>
+    <string name="register">Créer Compte</string>
 </resources>
