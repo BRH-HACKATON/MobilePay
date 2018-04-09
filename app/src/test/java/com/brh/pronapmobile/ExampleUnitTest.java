@@ -1,4 +1,4 @@
-package com.megalobiz.pronapmobile;
+package com.brh.pronapmobile;
 
 import org.junit.Test;
 
