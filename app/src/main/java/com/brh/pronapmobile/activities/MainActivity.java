@@ -1,9 +1,9 @@
-package com.megalobiz.pronapmobile.activities;
+package com.brh.pronapmobile.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.megalobiz.pronapmobile.R;
+import com.brh.pronapmobile.R;
 
 public class MainActivity extends AppCompatActivity {
 
