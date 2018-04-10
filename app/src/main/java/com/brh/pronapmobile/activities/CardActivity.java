@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.brh.pronapmobile.R;
+import com.brh.pronapmobile.fragments.CreateCardFragment;
 
 public class CardActivity extends AppCompatActivity {
 
@@ -37,7 +38,8 @@ public class CardActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                fab.setVisibility(View.GONE);
+                launchCreateFragment();
             }
         });
 
@@ -45,6 +47,7 @@ public class CardActivity extends AppCompatActivity {
             fab.setVisibility(View.GONE);
             Toast.makeText(CardActivity.this, "Create Card Form will be displayed", Toast.LENGTH_SHORT).show();
             // TODO : Launch Create Card Fragment
+            launchCreateFragment();
         }
     }
 
@@ -64,5 +67,11 @@ public class CardActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    public void launchCreateFragment() {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = new CreateCardFragment();
+        fm.beginTransaction().replace(R.id.flCard, fragment).commit();
     }
 }
