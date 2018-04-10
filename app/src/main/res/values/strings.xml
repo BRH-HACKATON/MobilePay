@@ -10,4 +10,13 @@
     <string name="full_name">Nom Complet</string>
     <string name="register_title">Créer un Compte PRONAP-MOBILE</string>
     <string name="register">Créer Compte</string>
+
+    <!-- Global Settings and Menu -->
+    <string name="action_settings">Settings</string>
+    <string name="vendor_account">Compte Vendeur</string>
+    <string name="manage_card">Gérer Carte</string>
+    <string name="request_payment">Préparer Paiement</string>
+    <string name="make_payment">Effectuer Paiement</string>
+
+
 </resources>
