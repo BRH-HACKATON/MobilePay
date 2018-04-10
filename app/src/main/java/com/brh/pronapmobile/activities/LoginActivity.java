@@ -63,9 +63,9 @@ public class LoginActivity extends AppCompatActivity {
         buttonLogin.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.AppTheme);
+                android.R.style.Theme_Holo_Light_Dialog);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
+        progressDialog.setMessage("Authentification en cours...");
         progressDialog.show();
 
         String email = editTextEmail.getText().toString();
@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                         // onLoginFailed();
                         progressDialog.dismiss();
                     }
-                }, 2000);
+                }, 1000);
     }
 
     public void onLoginSuccess() {

@@ -66,10 +66,13 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Préparer/Effectuer un Paiement!",
-                        Toast.LENGTH_LONG).show();
+                // TODO : Check if User does not have debit card to propose to create new one
+                addDebitCard();
             }
         });
+
+        // By default make Floating Button for creating Debit Card
+        fab.setImageResource(R.drawable.ic_credit_card_black_24dp);
     }
 
     @Override
@@ -108,6 +111,12 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_card) {
             startActivity(new Intent(getApplicationContext(), CardActivity.class));
         }
+    }
+
+    public void addDebitCard() {
+        Intent i = new Intent(getApplicationContext(), CardActivity.class);
+        i.putExtra("create", true);
+        startActivity(i);
     }
 
 }
