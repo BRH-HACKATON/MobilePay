@@ -11,12 +11,28 @@
     <string name="register_title">Créer un Compte PRONAP-MOBILE</string>
     <string name="register">Créer Compte</string>
 
+    <!-- Vendor Account -->
+    <string name="code">Effectuer Paiement</string>
+    <string name="routing_number">Numéro Routage Bancaire</string>
+    <string name="account_number">Numéro Compte Bancaire</string>
+    <string name="phone">Téléphone</string>
+    <string name="validate_profile">Valider Profil</string>
+
+    <!-- Debit Card info -->
+    <string name="card_number">Numéro Carte Débit</string>
+    <string name="card_holder_name">Nom du Titulaire</string>
+    <string name="card_expiry_date">MM/YY</string>
+    <string name="card_cvc">CVC</string>
+
     <!-- Global Settings and Menu -->
     <string name="action_settings">Settings</string>
     <string name="vendor_account">Compte Vendeur</string>
     <string name="manage_card">Gérer Carte</string>
     <string name="request_payment">Préparer Paiement</string>
     <string name="make_payment">Effectuer Paiement</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
