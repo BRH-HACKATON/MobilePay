@@ -1,0 +1,99 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp">
+
+        <ImageView android:id="@+id/ivClose"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="end"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"/>
+
+        <LinearLayout android:id="@+id/llPaymentQRCode"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:visibility="gone">
+
+            <ImageView android:id="@+id/qrCode"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="24dp"/>
+
+            <TextView android:id="@+id/tvQRCodeDirective"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/qr_code_directive"
+                android:gravity="center"
+                android:textSize="18sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/llPaymentInfo"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <TextView android:id="@+id/requestPaymentTitle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="@string/request_payment_title"
+                android:gravity="center"
+                android:textSize="20sp"/>
+
+            <!-- Product Description -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/product"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:hint="@string/product_description"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- Price -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="end">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text|numberDecimal"
+                    android:hint="@string/price"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/generate"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:padding="12dp"
+                android:text="@string/generate_code"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</ScrollView>

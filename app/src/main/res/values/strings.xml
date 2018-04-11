@@ -17,6 +17,13 @@
     <string name="account_number">Numéro Compte Bancaire</string>
     <string name="phone">Téléphone</string>
     <string name="validate_profile">Valider Profil</string>
+    <string name="product_description">Description Produit</string>
+    <string name="price">Prix</string>
+    <string name="generate_code">Générer le Code de Paiement</string>
+    <string name="request_payment_title">Entrer les Informations sur le Paiement</string>
+    <string name="qr_code_directive">
+        Demandez à votre Acheteur de scanner le QR Code avec cette application sur son portable
+    </string>
 
     <!-- Debit Card info -->
     <string name="card_debit_info">Informations de la Carte Débit</string>
@@ -33,6 +40,9 @@
     <string name="manage_card">Gérer Carte</string>
     <string name="request_payment">Préparer Paiement</string>
     <string name="make_payment">Effectuer Paiement</string>
+    <string name="select_role" >Changer de Role</string>
+    <string name="vendor">Vendeur</string>
+    <string name="buyer">Acheteur</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

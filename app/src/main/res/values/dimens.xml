@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
@@ -17,4 +17,7 @@
     <dimen name="card_image_height">200dp</dimen>
     <dimen name="list_body">14sp</dimen>
     <dimen name="navheader_height">222dp</dimen>
+
+    <!--Floating action button-->
+    <dimen name="design_fab_image_size" tools:override="true">36dp</dimen>
 </resources>
