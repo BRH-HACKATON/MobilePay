@@ -3,6 +3,8 @@ package com.brh.pronapmobile.activities;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +21,7 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.brh.pronapmobile.R;
+import com.brh.pronapmobile.fragments.RequestPaymentFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private NavigationView navigationView;
+    private FloatingActionButton fab;
 
     // by default all Users come with Buyer role
     private UserRole activeRole = UserRole.BUYER;
@@ -59,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // Check the Buyer Role by default
+        // TODO : Check User active role in Shared Preferences to check proper Role
+        activeRole = UserRole.BUYER;
+
         // Set behavior of Navigation drawer
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -73,18 +81,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        // Adding Floating Action Button to bottom right of main view
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO : Check if User does not have debit card to propose to create new one
-                addDebitCard();
-            }
-        });
-
-        // By default make Floating Button for creating Debit Card
-        fab.setImageResource(R.drawable.ic_credit_card_black_24dp);
+        // Setup Floating Action Button
+        setupFloatingActionButton();
 
         // Set Listener to Menu Items Role CheckBox
         setupListenerForRoles();
@@ -142,10 +140,6 @@ public class MainActivity extends AppCompatActivity {
         final MenuItem buyerSwitchItem = navigationView.getMenu().findItem(R.id.nav_buyer_role);
         final CompoundButton buyerSwitchView = (CompoundButton) MenuItemCompat.getActionView(buyerSwitchItem);
 
-        // Check the Buyer Role by default
-        // TODO : Check User active role in Shared Preferences to check proper Role
-        buyerSwitchView.setChecked(true);
-
         vendorSwitchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
@@ -157,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Set active Role to Vendor either case
                 activeRole = UserRole.VENDOR;
+                fab.setImageResource(R.drawable.ic_attach_money_black_24dp);
             }
         });
 
@@ -171,8 +166,40 @@ public class MainActivity extends AppCompatActivity {
 
                 // Set active Role to Buyer either case
                 activeRole = UserRole.BUYER;
+                fab.setImageResource(R.drawable.qr_code_reading);
             }
         });
+
+        if(activeRole == UserRole.BUYER) {
+            buyerSwitchView.setChecked(true);
+        } else if(activeRole == UserRole.VENDOR) {
+            vendorSwitchView.setChecked(true);
+        }
+    }
+
+    public void setupFloatingActionButton() {
+        // Adding Floating Action Button to bottom right of main view
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(activeRole == UserRole.BUYER) {
+                    // TODO : Check if User does not have debit card to propose to create new one
+                    addDebitCard();
+                } else if(activeRole == UserRole.VENDOR) {
+                    requestPayment();
+                }
+            }
+        });
+
+        // By default make Floating Button for creating Debit Card
+        fab.setImageResource(R.drawable.ic_credit_card_black_24dp);
+    }
+
+    public void requestPayment() {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = new RequestPaymentFragment();
+        fm.beginTransaction().replace(R.id.flMainContent, fragment).commit();
     }
 
 }
