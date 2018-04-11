@@ -40,7 +40,7 @@
     <string name="manage_card">Gérer Carte</string>
     <string name="request_payment">Préparer Paiement</string>
     <string name="make_payment">Effectuer Paiement</string>
-    <string name="select_role" >Changer de Role</string>
+    <string name="select_role">Changer de Role</string>
     <string name="vendor">Vendeur</string>
     <string name="buyer">Acheteur</string>
 
