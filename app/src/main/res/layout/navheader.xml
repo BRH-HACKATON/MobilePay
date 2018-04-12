@@ -47,7 +47,7 @@
             android:shadowDx="2"
             android:shadowDy="2"
             android:shadowRadius="3"
-            android:text="buyer@android.com"
+            android:text="acheteur@android.com"
             android:textColor="#ffffff"
             android:textSize="16sp" />
 
