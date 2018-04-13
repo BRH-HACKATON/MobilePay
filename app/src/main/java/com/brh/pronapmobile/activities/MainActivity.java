@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brh.pronapmobile.R;
@@ -92,6 +93,13 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 });
+
+
+        User user = User.find(1);
+        if(user != null) {
+            TextView tvEmail = navigationView.getHeaderView(0).findViewById(R.id.tvEmail);
+            tvEmail.setText(user.getEmail());
+        }
 
         // Setup Floating Action Button
         setupFloatingActionButtons();

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
@@ -14,6 +15,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brh.pronapmobile.R;
+import com.brh.pronapmobile.models.User;
+import com.brh.pronapmobile.utils.HashGenerator;
+
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKeyFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -21,10 +31,12 @@ public class LoginActivity extends AppCompatActivity {
     private static final int REQUEST_REGISTER = 0;
 
     private AppCompatButton buttonLogin;
-    private TextView tvRegister;
+    private TextView tvForget;
 
-    private TextInputEditText editTextEmail;
-    private TextInputEditText editTextPassword;
+    private TextInputLayout tilEmail;
+    private TextInputLayout tilPassword;
+    private TextInputLayout tilPasswordConf;
+    private String hashedPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +44,10 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         buttonLogin = findViewById(R.id.btnLogin);
-        editTextEmail = findViewById(R.id.email);
-        editTextPassword = findViewById(R.id.password);
-        tvRegister = findViewById(R.id.tvRegister);
+        tilEmail = findViewById(R.id.email);
+        tilPassword = findViewById(R.id.password);
+        tilPasswordConf = findViewById(R.id.passwordConfirmation);
+        tvForget = findViewById(R.id.tvForgetPassword);
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,10 +56,18 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        tvRegister.setOnClickListener(new View.OnClickListener() {
+        // only 1 User record will be in database (user_id = 1)
+        // If User is already in database, goto MainActivity
+        if(User.isLoggedIn()) {
+            // Login directly
+            onLoginSuccess();
+        }
+
+        tvForget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                register();
+                Toast.makeText(LoginActivity.this, "Un Code de réinitialisation a été envoyé sur votre email",
+                        Toast.LENGTH_LONG).show();
             }
         });
 
@@ -64,26 +85,24 @@ public class LoginActivity extends AppCompatActivity {
 
         buttonLogin.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                android.R.style.Theme_Holo_Light_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authentification en cours...");
-        progressDialog.show();
+        String email = tilEmail.getEditText().getText().toString();
+        String password = tilPassword.getEditText().getText().toString();
 
-        String email = editTextEmail.getText().toString();
-        String password = editTextPassword.getText().toString();
+        String hashedPassword = HashGenerator.sha1(password);
+        if(hashedPassword != null) {
+            User user = new User();
+            user.setId(1);
+            user.setEmail(email);
+            user.setPassword(hashedPassword);
+            user.setStatus(1);
+            user.save();
 
-        // TODO: Implement your own registration logic here.
+            onLoginSuccess();
+        } else {
+            Toast.makeText(LoginActivity.this, "Impossible de se connecter, Problème de sécurité",
+                    Toast.LENGTH_LONG).show();
+        }
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 1000);
     }
 
     public void onLoginSuccess() {
@@ -94,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Login failed", Toast.LENGTH_LONG).show();
 
         buttonLogin.setEnabled(true);
     }
@@ -116,8 +135,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public boolean validate() {
-        if(editTextEmail.getText().toString() == "" || editTextPassword.getText().toString() == "") {
+        if(tilEmail.getEditText().getText().toString().equals("") || tilPassword.getEditText().getText().toString().equals("")
+                || tilPasswordConf.getEditText().getText().toString().equals("")) {
             Toast.makeText(this, "Vous devez rentrer un Email et un Mot de Passe",
+                    Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(!tilPassword.getEditText().getText().toString().equals(tilPasswordConf.getEditText().getText().toString())) {
+            Toast.makeText(this, "Les 2 mots de passe entrés sont différents!",
                     Toast.LENGTH_LONG).show();
             return false;
         }

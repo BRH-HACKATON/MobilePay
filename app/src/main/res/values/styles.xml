@@ -8,4 +8,19 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Account.Input.TextInputLayout" parent="@android:style/TextAppearance">
+        <item name="colorControlNormal">#ddd</item>
+        <item name="colorControlActivated">#fff</item>
+        <item name="colorControlHighlight">#fff</item>
+    </style>
+
+    <style name="Account.Input.EditText" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <style name="Account.Input.ProceedButton" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#fff</item>
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+
 </resources>
