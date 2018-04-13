@@ -31,6 +31,10 @@ public class CardArrayAdapter extends ArrayAdapter<Card> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         final Card card = getItem(position);
+        if(card.getId() > 0) {
+            Log.d("CardArrayAdapter", "Card : " + card.getId());
+        }
+
         if(convertView == null){
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.item_card, parent, false);
@@ -43,7 +47,7 @@ public class CardArrayAdapter extends ArrayAdapter<Card> {
             // Process Text of Card
             String hiddenText = "XXXX XXXX XXX ";
             // Add only the 4 last Digits
-            hiddenText += card.getNumber().substring(card.getNumber().length() - 4, card.getNumber().length());
+            hiddenText += card.getNumber().substring(Math.max(card.getNumber().length() - 4, 0), card.getNumber().length());
             tvNumber.setText(hiddenText);
         }
 

@@ -2,14 +2,18 @@ package com.brh.pronapmobile.fragments;
 
 
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.brh.pronapmobile.R;
+import com.brh.pronapmobile.activities.VendorActivity;
+import com.brh.pronapmobile.models.Vendor;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +22,13 @@ public class CreateVendorFragment extends Fragment {
 
     private static final String TAG = "CreateVendorFragment";
 
+    View rootView;
     AppCompatButton validateButton;
+    TextInputLayout tilName;
+    TextInputLayout tilCode;
+    TextInputLayout tilAccount;
+    TextInputLayout tilRouting;
+    TextInputLayout tilPhone;
 
     public CreateVendorFragment() {
         // Required empty public constructor
@@ -30,9 +40,14 @@ public class CreateVendorFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View rootView = inflater.inflate(R.layout.fragment_create_vendor, container, false);
+        rootView = inflater.inflate(R.layout.fragment_create_vendor, container, false);
 
         validateButton = rootView.findViewById(R.id.validate);
+        tilName = rootView.findViewById(R.id.vendor_name);
+        tilCode = rootView.findViewById(R.id.brh_code);
+        tilAccount = rootView.findViewById(R.id.vendor_account);
+        tilRouting = rootView.findViewById(R.id.routing_number);
+        tilPhone = rootView.findViewById(R.id.phone);
 
         validateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,16 +64,33 @@ public class CreateVendorFragment extends Fragment {
 
         // TODO : Validate Data
         if(!validate()) {
-            Toast.makeText(getContext(), "Problem with data, enter the data properly and try again!",
+            Toast.makeText(getContext(), "Erreur dans vos données, vérifiez et essayez encore!",
                     Toast.LENGTH_LONG).show();
             return;
         }
 
-        // BRH will validate information and send User a unique Vendor Code
-        // TODO : add that Code to the Vendor Model and attach the Vendor Model to the User Model
+        try {
+            Vendor vendor = new Vendor();
+            vendor.setName(tilName.getEditText().getText().toString());
+            vendor.setCode(tilCode.getEditText().getText().toString());
+            vendor.setAccount(tilAccount.getEditText().getText().toString());
+            vendor.setRouting(tilRouting.getEditText().getText().toString());
+            vendor.setPhone(tilPhone.getEditText().getText().toString());
 
-        Toast.makeText(getContext(), "Vendor Profile created!",
-                Toast.LENGTH_LONG).show();
+            vendor.save();
+            Log.d(TAG, "Vendor Profile added : " + vendor.getId());
+
+            Toast.makeText(getContext(), "Compte Vendeur ajoutée!", Toast.LENGTH_LONG).show();
+
+            // close fragment
+            ((VendorActivity) getActivity()).listVendors();
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            Toast.makeText(getContext(), "Une Erreur est survenue, essayez encore!", Toast.LENGTH_LONG).show();
+        }
     }
 
     public boolean validate() {

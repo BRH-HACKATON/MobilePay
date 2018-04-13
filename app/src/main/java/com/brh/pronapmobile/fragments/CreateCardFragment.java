@@ -6,6 +6,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +21,14 @@ import com.brh.pronapmobile.models.Card;
  */
 public class CreateCardFragment extends Fragment {
 
+    private static final String TAG = "CreateCardFragment";
 
     View rootView;
     AppCompatButton validateButton;
     TextInputLayout tilNumber;
     TextInputLayout tilHolder;
     TextInputLayout tilExpiry;
-    TextInputLayout tilCVV;
+    TextInputLayout tilCvv;
 
     public CreateCardFragment() {
         // Required empty public constructor
@@ -43,7 +45,7 @@ public class CreateCardFragment extends Fragment {
         tilNumber = rootView.findViewById(R.id.card_number);
         tilHolder = rootView.findViewById(R.id.holder_name);
         tilExpiry = rootView.findViewById(R.id.expiry_date);
-        tilCVV = rootView.findViewById(R.id.cvv);
+        tilCvv = rootView.findViewById(R.id.cvv);
 
         validateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,11 +67,15 @@ public class CreateCardFragment extends Fragment {
             return;
         }
 
-        Card card = new Card(tilNumber.getEditText().getText().toString(), tilHolder.getEditText().getText().toString(),
-                tilExpiry.getEditText().getText().toString(), tilCVV.getEditText().getText().toString());
-
         try {
+            Card card = new Card();
+            card.setNumber(tilNumber.getEditText().getText().toString());
+            card.setHolder(tilHolder.getEditText().getText().toString());
+            card.setExpiry(tilExpiry.getEditText().getText().toString());
+            card.setCvv(tilCvv.getEditText().getText().toString());
+
             card.save();
+            Log.d(TAG, "Card added : " + card.getId());
 
             Toast.makeText(getContext(), "Carte de Crédit ajoutée!", Toast.LENGTH_LONG).show();
 

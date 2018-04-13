@@ -32,6 +32,8 @@ import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static android.view.View.GONE;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -156,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Set active Role to Vendor either case
                 activeRole = UserRole.VENDOR;
-                fabBuyer.setVisibility(View.GONE);
+                fabBuyer.setVisibility(GONE);
                 fabVendor.setVisibility(View.VISIBLE);
             }
         });
@@ -172,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Set active Role to Buyer either case
                 activeRole = UserRole.BUYER;
-                fabVendor.setVisibility(View.GONE);
+                fabVendor.setVisibility(GONE);
                 fabBuyer.setVisibility(View.VISIBLE);
             }
         });
@@ -226,12 +228,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void requestPayment() {
+        fabBuyer.setVisibility(GONE);
+        fabVendor.setVisibility(GONE);
+
         FragmentManager fm = getSupportFragmentManager();
         RequestPaymentFragment fragment = new RequestPaymentFragment();
         fm.beginTransaction().replace(R.id.flMainContent, fragment).commit();
     }
 
     public void scanQRCode() {
+        fabBuyer.setVisibility(GONE);
+        fabVendor.setVisibility(GONE);
+
         //intializing scan object
         qrScan = new IntentIntegrator(this);
         qrScan.initiateScan();
@@ -270,6 +278,14 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    public void displayFloatingButtons() {
+        if(fabBuyer != null)
+            fabBuyer.setVisibility(View.VISIBLE);
+
+        if(fabVendor != null)
+            fabVendor.setVisibility(View.VISIBLE);
     }
 
 }

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brh.pronapmobile.R;
+import com.brh.pronapmobile.activities.MainActivity;
 import com.brh.pronapmobile.utils.BitmapEncoder;
 import com.brh.pronapmobile.utils.SMSUtils;
 import com.google.zxing.WriterException;
@@ -113,6 +114,7 @@ public class MakePaymentFragment extends Fragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ((MainActivity)getActivity()).displayFloatingButtons();
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(MakePaymentFragment.this).commit();
             }
