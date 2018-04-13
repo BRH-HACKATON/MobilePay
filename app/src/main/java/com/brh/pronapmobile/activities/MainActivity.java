@@ -16,14 +16,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.brh.pronapmobile.R;
 import com.brh.pronapmobile.fragments.MakePaymentFragment;
 import com.brh.pronapmobile.fragments.RequestPaymentFragment;
 
+import com.brh.pronapmobile.models.Card;
+import com.brh.pronapmobile.models.User;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -36,17 +38,19 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private NavigationView navigationView;
-    private FloatingActionButton fab;
+    private FloatingActionButton fabBuyer;
+    private FloatingActionButton fabVendor;
 
-    // by default all Users come with Buyer role
-    private UserRole activeRole = UserRole.BUYER;
-    private boolean hasCard = false;
+    // by default all Users come with No role
+    private UserRole activeRole = UserRole.NONE;
+    private Card currentCard;
 
     private IntentIntegrator qrScan;
 
     private enum UserRole{
         BUYER,
-        VENDOR
+        VENDOR,
+        NONE
     }
 
     @Override
@@ -73,10 +77,6 @@ public class MainActivity extends AppCompatActivity {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // Check the Buyer Role by default
-        // TODO : Check User active role in Shared Preferences to check proper Role
-        activeRole = UserRole.BUYER;
-
         // Set behavior of Navigation drawer
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -92,10 +92,11 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         // Setup Floating Action Button
-        setupFloatingActionButton();
+        setupFloatingActionButtons();
 
         // Set Listener to Menu Items Role CheckBox
         setupListenerForRoles();
+
     }
 
     @Override
@@ -136,12 +137,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void addDebitCard() {
-        Intent i = new Intent(getApplicationContext(), CardActivity.class);
-        i.putExtra("create", true);
-        startActivity(i);
-    }
-
     public void setupListenerForRoles() {
         // Set Listener to Menu Items Role CheckBox
         final MenuItem vendorSwitchItem = navigationView.getMenu().findItem(R.id.nav_vendor_role);
@@ -161,7 +156,8 @@ public class MainActivity extends AppCompatActivity {
 
                 // Set active Role to Vendor either case
                 activeRole = UserRole.VENDOR;
-                fab.setImageResource(R.drawable.ic_attach_money_black_24dp);
+                fabBuyer.setVisibility(View.GONE);
+                fabVendor.setVisibility(View.VISIBLE);
             }
         });
 
@@ -176,7 +172,8 @@ public class MainActivity extends AppCompatActivity {
 
                 // Set active Role to Buyer either case
                 activeRole = UserRole.BUYER;
-                fab.setImageResource(R.drawable.qr_code_reading);
+                fabVendor.setVisibility(View.GONE);
+                fabBuyer.setVisibility(View.VISIBLE);
             }
         });
 
@@ -187,30 +184,45 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setupFloatingActionButton() {
-        // Adding Floating Action Button to bottom right of main view
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+    public void setupFloatingActionButtons() {
+        // Adding Floating Action Buttons to bottom right of main view
+        fabBuyer = findViewById(R.id.fabBuyer);
+        fabBuyer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(activeRole == UserRole.BUYER) {
-                    // TODO : Check if User does not have debit card to propose to create new one
-                    // fake hasCard
-                    hasCard = true;
-                    if(hasCard) {
-                        scanQRCode();
-                    } else {
-                        addDebitCard();
-                    }
-
-                } else if(activeRole == UserRole.VENDOR) {
-                    requestPayment();
+                // TODO : Check if User does not have debit card to propose to create new one
+                if(User.hasCard()) {
+                    scanQRCode();
+                } else {
+                    addDebitCard();
                 }
             }
         });
 
-        // By default make Floating Button for creating Debit Card
-        fab.setImageResource(R.drawable.ic_credit_card_black_24dp);
+        fabVendor = findViewById(R.id.fabVendor);
+        fabVendor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(User.hasVendorProfile()) {
+                    requestPayment();
+                } else {
+                    addVendorProfile();
+                }
+            }
+        });
+
+    }
+
+    public void addDebitCard() {
+        Intent i = new Intent(this, CardActivity.class);
+        i.putExtra("create", true);
+        startActivity(i);
+    }
+
+    public void addVendorProfile() {
+        Intent i = new Intent(this, VendorActivity.class);
+        i.putExtra("create", true);
+        startActivity(i);
     }
 
     public void requestPayment() {

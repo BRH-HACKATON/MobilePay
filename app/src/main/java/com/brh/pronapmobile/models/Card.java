@@ -1,25 +1,56 @@
 package com.brh.pronapmobile.models;
 
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Method;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Keitel on 4/11/18.
  */
 
-public class Card implements Serializable {
+@Table(database = PronapDatabase.class)
+public class Card extends BaseModel implements Serializable {
 
+    @Column
+    @PrimaryKey
+    private int id;
+
+    @Column
     private String number;
-    private String holderName;
-    private String expiryDate;
+
+    @Column
+    private String holder;
+
+    @Column
+    private String expiry;
+
+    @Column
     private String cvv;
 
-    private User user;
+    public Card() {
 
-    public Card(String number, String holderName, String expiryDate, String cvv) {
+    }
+
+    public Card(String number, String holder, String expiry, String cvv) {
         this.number = number;
-        this.holderName = holderName;
-        this.expiryDate = expiryDate;
+        this.holder = holder;
+        this.expiry = expiry;
         this.cvv = cvv;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNumber() {
@@ -30,20 +61,20 @@ public class Card implements Serializable {
         this.number = number;
     }
 
-    public String getHolderName() {
-        return holderName;
+    public String getHolder() {
+        return holder;
     }
 
-    public void setHolderName(String holderName) {
-        this.holderName = holderName;
+    public void setHolder(String holder) {
+        this.holder = holder;
     }
 
-    public String getExpiryDate() {
-        return expiryDate;
+    public String getExpiry() {
+        return expiry;
     }
 
-    public void setExpiryDate(String expiryDate) {
-        this.expiryDate = expiryDate;
+    public void setExpiry(String expiry) {
+        this.expiry = expiry;
     }
 
     public String getCvv() {
@@ -54,15 +85,12 @@ public class Card implements Serializable {
         this.cvv = cvv;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public boolean isExipred() {
         return false;
+    }
+
+
+    public static ArrayList<Card> all() {
+        return (ArrayList<Card>) SQLite.select().from(Card.class).queryList();
     }
 }

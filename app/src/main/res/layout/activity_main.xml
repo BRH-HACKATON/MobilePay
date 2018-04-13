@@ -16,11 +16,9 @@
         android:background="@color/white" />
 
     <android.support.design.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -38,14 +36,26 @@
 
         </android.support.design.widget.AppBarLayout>
 
-
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
+            android:id="@+id/fabBuyer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
+            android:layout_gravity="bottom|end"
             android:layout_marginBottom="@dimen/md_keylines"
             android:layout_marginRight="@dimen/md_keylines"
+            android:src="@drawable/qr_code_reading"
+            android:tint="@color/white"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabVendor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginBottom="0dp"
+            android:layout_marginRight="0dp"
+            app:layout_anchor="@id/fabBuyer"
+            app:layout_anchorGravity="top"
+            android:src="@drawable/ic_attach_money_black_24dp"
             android:tint="@color/white"/>
 
     </android.support.design.widget.CoordinatorLayout>

@@ -7,14 +7,29 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.brh.pronapmobile.R;
+import com.brh.pronapmobile.adapters.CardArrayAdapter;
 import com.brh.pronapmobile.fragments.CreateCardFragment;
+import com.brh.pronapmobile.models.Card;
+
+import java.util.ArrayList;
 
 public class CardActivity extends AppCompatActivity {
+
+    private final static String TAG = "CardActivity";
+
+    private ArrayList<Card> cards;
+    private CardArrayAdapter aCards;
+    private ListView lvCards;
+
+    private FrameLayout flCard;
 
     FloatingActionButton fab;
 
@@ -33,6 +48,15 @@ public class CardActivity extends AppCompatActivity {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // initialize Card ArrayList
+        cards = new ArrayList<>();
+        // initialize Card Array Adapter
+        aCards = new CardArrayAdapter(this, cards);
+        // find list view
+        lvCards = findViewById(R.id.lvCards);
+        // connect adapter to list view
+        lvCards.setAdapter(aCards);
+
         // Adding Floating Action Button to bottom right of main view
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -43,12 +67,15 @@ public class CardActivity extends AppCompatActivity {
             }
         });
 
-        if(getIntent().getBooleanExtra("create", false)) {
+        if (getIntent().getBooleanExtra("create", false)) {
             fab.setVisibility(View.GONE);
             Toast.makeText(CardActivity.this, "Create Card Form will be displayed", Toast.LENGTH_SHORT).show();
             // TODO : Launch Create Card Fragment
             launchCreateFragment();
         }
+
+        // Populate Cards
+        listCards();
     }
 
     @Override
@@ -70,8 +97,25 @@ public class CardActivity extends AppCompatActivity {
     }
 
     public void launchCreateFragment() {
+        // hide listView
+        lvCards.setVisibility(View.GONE);
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = new CreateCardFragment();
         fm.beginTransaction().replace(R.id.flCard, fragment).commit();
     }
+
+    public void listCards() {
+        lvCards.setVisibility(View.VISIBLE);
+        // retrieve all cards from DB
+        cards = Card.all();
+
+        //aCards.clear();
+        aCards.addAll(cards);
+        aCards.notifyDataSetChanged();
+    }
+
+    public void clearCards() {
+        aCards.clear();
+    }
+
 }

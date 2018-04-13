@@ -4,7 +4,6 @@ package com.brh.pronapmobile.fragments;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,10 +15,8 @@ import android.widget.Toast;
 
 import com.brh.pronapmobile.R;
 import com.brh.pronapmobile.utils.BitmapEncoder;
-import com.brh.pronapmobile.utils.SMSSender;
 import com.brh.pronapmobile.utils.SMSUtils;
 import com.google.zxing.WriterException;
-import com.google.zxing.client.result.SMSMMSResultParser;
 
 import org.json.JSONObject;
 
