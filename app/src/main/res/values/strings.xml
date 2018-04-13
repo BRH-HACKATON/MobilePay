@@ -28,7 +28,7 @@
     <!-- Debit Card info -->
     <string name="card_debit_info">Informations de la Carte Débit</string>
     <string name="card_number">Numéro Carte Débit</string>
-    <string name="card_holder_name">Nom du Titulaire (comme sur la carte)</string>
+    <string name="card_holder_name">Nom du Titulaire (sur la carte)</string>
     <string name="card_expiry_date">Exp (MM / YYYY)</string>
     <string name="card_cvv">CVV</string>
     <string name="validate">Valider</string>

@@ -1,6 +1,8 @@
 package com.brh.pronapmobile.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.brh.pronapmobile.R;
+import com.brh.pronapmobile.models.User;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -46,10 +49,10 @@ public class RegisterActivity extends AppCompatActivity {
         Log.d(TAG, "Register");
 
         // TODO : Validate inputs
-        /*if (!validate()) {
-            onRegistrationFailed();
+        if (!validate()) {
+            onRegisterFailed();
             return;
-        }*/
+        }
 
         buttonRegister.setEnabled(false);
 
@@ -59,8 +62,10 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog.setMessage("Registering...");
         progressDialog.show();
 
+        String name = editTextFullName.getText().toString();
         String email = editTextEmail.getText().toString();
         String password = editTextPassword.getText().toString();
+        String passwordConf = editTextPasswordConf.getText().toString();
 
         // TODO: Implement your own authentication logic here.
 
@@ -76,6 +81,13 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void onRegisterSuccess() {
+        // set shared preferences
+        SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("email", editTextEmail.getText().toString());
+        editor.putString("full_name", editTextFullName.getText().toString());
+        editor.commit();
+
         buttonRegister.setEnabled(true);
         setResult(RESULT_OK);
         finish();
@@ -84,5 +96,23 @@ public class RegisterActivity extends AppCompatActivity {
     public void onRegisterFailed() {
         Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
         buttonRegister.setEnabled(true);
+    }
+
+    public boolean validate() {
+        if(editTextFullName.getText().toString() == "" || editTextEmail.getText().toString() == ""
+                || editTextPassword.getText().toString() == "") {
+
+            Toast.makeText(this, "Vous devez rentrer votre Nom Complet, un Email et un Mot de Passe",
+                    Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(editTextPassword.getText().toString() != editTextPasswordConf.getText().toString()) {
+            Toast.makeText(this, "La confirmation de votre Mot de Passe est incorrecte!",
+                    Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
     }
 }

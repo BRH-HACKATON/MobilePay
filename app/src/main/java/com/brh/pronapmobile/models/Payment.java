@@ -2,26 +2,41 @@ package com.brh.pronapmobile.models;
 
 import android.icu.text.SimpleDateFormat;
 
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by Keitel on 4/11/18.
  */
-
+@Table(database = PronapDatabase.class)
 public class Payment implements Serializable {
 
+    @Column
+    @PrimaryKey
     private int id;
-    private SimpleDateFormat date;
 
+    @Column
+    private Date date;
+
+    @Column
+    private Double amount;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = false)
     private Vendor vendor;
-    private User buyer;
-    private Card card;
 
-    public Payment(SimpleDateFormat date, Vendor vendor, User buyer, Card card) {
+    public Payment(Date date, Double amount) {
         this.date = date;
-        this.vendor = vendor;
-        this.buyer = buyer;
-        this.card = card;
+        this.amount = amount;
+    }
+
+    public Payment() {
+
     }
 
     public int getId() {
@@ -32,12 +47,20 @@ public class Payment implements Serializable {
         this.id = id;
     }
 
-    public SimpleDateFormat getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(SimpleDateFormat date) {
+    public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public Vendor getVendor() {
@@ -48,19 +71,4 @@ public class Payment implements Serializable {
         this.vendor = vendor;
     }
 
-    public User getBuyer() {
-        return buyer;
-    }
-
-    public void setBuyer(User buyer) {
-        this.buyer = buyer;
-    }
-
-    public Card getCard() {
-        return card;
-    }
-
-    public void setCard(Card card) {
-        this.card = card;
-    }
 }

@@ -1,7 +1,9 @@
 package com.brh.pronapmobile.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -55,10 +57,10 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "Login");
 
         // TODO : Validate inputs
-        /*if (!validate()) {
+        if (!validate()) {
             onLoginFailed();
             return;
-        }*/
+        }
 
         buttonLogin.setEnabled(false);
 
@@ -111,6 +113,16 @@ public class LoginActivity extends AppCompatActivity {
                 this.finish();
             }
         }
+    }
+
+    public boolean validate() {
+        if(editTextEmail.getText().toString() == "" || editTextPassword.getText().toString() == "") {
+            Toast.makeText(this, "Vous devez rentrer un Email et un Mot de Passe",
+                    Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
     }
 
 }

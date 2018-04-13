@@ -1,29 +1,57 @@
 package com.brh.pronapmobile.models;
 
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Keitel on 4/11/18.
  */
-
+@Table(database = PronapDatabase.class)
 public class Vendor implements Serializable {
 
+    @Column
+    @PrimaryKey
+    private int id;
+
+    @Column
     private String name;
+
+    @Column
     private String code;
-    private String accountNumber;
-    private String bankRouting;
+
+    @Column
+    private String account;
+
+    @Column
+    private String routing;
+
+    @Column
     private String phone;
 
-    private User user;
     private ArrayList<Payment> payments;
 
-    public Vendor(String name, String code, String accountNumber, String bankRouting, String phone) {
+    public Vendor() {
+
+    }
+
+    public Vendor(String name, String code, String account, String routing, String phone) {
         this.name = name;
         this.code = code;
-        this.accountNumber = accountNumber;
-        this.bankRouting = bankRouting;
+        this.account = account;
+        this.routing = routing;
         this.phone = phone;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -42,20 +70,20 @@ public class Vendor implements Serializable {
         this.code = code;
     }
 
-    public String getAccountNumber() {
-        return accountNumber;
+    public String getAccount() {
+        return account;
     }
 
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
-    public String getBankRouting() {
-        return bankRouting;
+    public String getRouting() {
+        return routing;
     }
 
-    public void setBankRouting(String bankRouting) {
-        this.bankRouting = bankRouting;
+    public void setRouting(String routing) {
+        this.routing = routing;
     }
 
     public String getPhone() {
@@ -66,18 +94,13 @@ public class Vendor implements Serializable {
         this.phone = phone;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public ArrayList<Payment> getPayments() {
         return payments;
     }
 
+    public void setPayments(ArrayList<Payment> payments) {
+        this.payments = payments;
+    }
 
 
     public void addPayment(Payment payment) {

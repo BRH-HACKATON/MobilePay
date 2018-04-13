@@ -2,6 +2,8 @@ package com.brh.pronapmobile.fragments;
 
 
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
@@ -10,13 +12,21 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.brh.pronapmobile.R;
+import com.brh.pronapmobile.activities.CardActivity;
+import com.brh.pronapmobile.models.Card;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class CreateCardFragment extends Fragment {
 
+
+    View rootView;
     AppCompatButton validateButton;
+    TextInputLayout tilNumber;
+    TextInputLayout tilHolder;
+    TextInputLayout tilExpiry;
+    TextInputLayout tilCVV;
 
     public CreateCardFragment() {
         // Required empty public constructor
@@ -27,9 +37,13 @@ public class CreateCardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_create_card, container, false);
+        rootView = inflater.inflate(R.layout.fragment_create_card, container, false);
 
         validateButton = rootView.findViewById(R.id.validate);
+        tilNumber = rootView.findViewById(R.id.card_number);
+        tilHolder = rootView.findViewById(R.id.holder_name);
+        tilExpiry = rootView.findViewById(R.id.expiry_date);
+        tilCVV = rootView.findViewById(R.id.cvv);
 
         validateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,16 +60,28 @@ public class CreateCardFragment extends Fragment {
 
         // TODO : Validate Data
         if(!validate()) {
-            Toast.makeText(getContext(), "Problem with data, enter the data properly and try again!",
+            Toast.makeText(getContext(), "Erreur dans vos données, vérifiez et essayez encore!",
                     Toast.LENGTH_LONG).show();
             return;
         }
 
-        // BRH will validate information and send User a unique Vendor Code
-        // TODO : add that Code to the Vendor Model and attach the Vendor Model to the User Model
+        Card card = new Card(tilNumber.getEditText().getText().toString(), tilHolder.getEditText().getText().toString(),
+                tilExpiry.getEditText().getText().toString(), tilCVV.getEditText().getText().toString());
 
-        Toast.makeText(getContext(), "Card created!",
-                Toast.LENGTH_LONG).show();
+        try {
+            card.save();
+
+            Toast.makeText(getContext(), "Carte de Crédit ajoutée!", Toast.LENGTH_LONG).show();
+
+            // close fragment
+            ((CardActivity) getActivity()).listCards();
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            Toast.makeText(getContext(), "Une Erreur est survenue, essayez encore!", Toast.LENGTH_LONG).show();
+        }
     }
 
     public boolean validate() {
