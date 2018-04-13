@@ -11,12 +11,22 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.brh.pronapmobile.R;
+import com.brh.pronapmobile.adapters.VendorArrayAdapter;
 import com.brh.pronapmobile.fragments.CreateVendorFragment;
+import com.brh.pronapmobile.models.Vendor;
+
+import java.util.ArrayList;
 
 public class VendorActivity extends AppCompatActivity {
 
+    private ArrayList<Vendor> vendors;
+    private VendorArrayAdapter aVendors;
+    private ListView lvVendors;
+    
     FloatingActionButton fab;
 
     @Override
@@ -32,18 +42,33 @@ public class VendorActivity extends AppCompatActivity {
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setTitle("Vos Comptes BRH");
         }
+
+        // initialize Vendor ArrayList
+        vendors = new ArrayList<>();
+        // initialize Vendor Array Adapter
+        aVendors = new VendorArrayAdapter(this, vendors);
+        // find list view
+        lvVendors = findViewById(R.id.lvVendors);
+        // connect adapter to list view
+        lvVendors.setAdapter(aVendors);
 
         // Adding Floating Action Button to bottom right of main view
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm = getSupportFragmentManager();
-                Fragment fragment = new CreateVendorFragment();
-                fm.beginTransaction().replace(R.id.flVendor, fragment).commit();
+                launchCreateFragment();
             }
         });
+
+        if (getIntent().getBooleanExtra("create", false)) {
+            Toast.makeText(this, "Create Vendor Form will be displayed", Toast.LENGTH_SHORT).show();
+            launchCreateFragment();
+        } else {
+            listVendors();
+        }
 
     }
 
@@ -63,5 +88,30 @@ public class VendorActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    public void launchCreateFragment() {
+        // hide listView and Floating Action Button
+        fab.setVisibility(View.GONE);
+        lvVendors.setVisibility(View.GONE);
+
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = new CreateVendorFragment();
+        fm.beginTransaction().replace(R.id.flVendor, fragment).commit();
+    }
+
+    public void listVendors() {
+        lvVendors.setVisibility(View.VISIBLE);
+        aVendors.clear();
+
+        // retrieve all vendors from DB
+        vendors = Vendor.all();
+
+        aVendors.addAll(vendors);
+        aVendors.notifyDataSetChanged();
+    }
+
+    public void clearVendors() {
+        aVendors.clear();
     }
 }

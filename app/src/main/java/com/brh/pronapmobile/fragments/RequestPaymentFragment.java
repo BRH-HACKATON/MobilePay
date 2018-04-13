@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.brh.pronapmobile.R;
+import com.brh.pronapmobile.activities.MainActivity;
 import com.brh.pronapmobile.utils.BitmapEncoder;
 import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
@@ -71,6 +72,7 @@ public class RequestPaymentFragment extends Fragment {
                 Log.d(TAG, "Close Fragment clicked");
                 //getActivity().onBackPressed();
                 //getActivity().getFragmentManager().popBackStack();
+                ((MainActivity)getActivity()).displayFloatingButtons();
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .remove(RequestPaymentFragment.this).commit();
             }

@@ -29,8 +29,6 @@ public class CardActivity extends AppCompatActivity {
     private CardArrayAdapter aCards;
     private ListView lvCards;
 
-    private FrameLayout flCard;
-
     FloatingActionButton fab;
 
     @Override
@@ -46,6 +44,8 @@ public class CardActivity extends AppCompatActivity {
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
+
+            supportActionBar.setTitle("Vos Applications");
         }
 
         // initialize Card ArrayList
@@ -62,20 +62,17 @@ public class CardActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fab.setVisibility(View.GONE);
                 launchCreateFragment();
             }
         });
 
         if (getIntent().getBooleanExtra("create", false)) {
-            fab.setVisibility(View.GONE);
             Toast.makeText(CardActivity.this, "Create Card Form will be displayed", Toast.LENGTH_SHORT).show();
-            // TODO : Launch Create Card Fragment
             launchCreateFragment();
+        } else {
+            // Populate Cards
+            listCards();
         }
-
-        // Populate Cards
-        listCards();
     }
 
     @Override
@@ -97,8 +94,10 @@ public class CardActivity extends AppCompatActivity {
     }
 
     public void launchCreateFragment() {
-        // hide listView
+        // hide listView and Floating Action Button
+        fab.setVisibility(View.GONE);
         lvCards.setVisibility(View.GONE);
+
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = new CreateCardFragment();
         fm.beginTransaction().replace(R.id.flCard, fragment).commit();
@@ -106,10 +105,11 @@ public class CardActivity extends AppCompatActivity {
 
     public void listCards() {
         lvCards.setVisibility(View.VISIBLE);
+        aCards.clear();
+
         // retrieve all cards from DB
         cards = Card.all();
 
-        //aCards.clear();
         aCards.addAll(cards);
         aCards.notifyDataSetChanged();
     }

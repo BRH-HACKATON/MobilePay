@@ -1,5 +1,7 @@
 package com.brh.pronapmobile.models;
 
+import android.util.Log;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
 public class Card extends BaseModel implements Serializable {
 
     @Column
-    @PrimaryKey
+    @PrimaryKey (autoincrement=true)
     private int id;
 
     @Column
@@ -91,6 +93,8 @@ public class Card extends BaseModel implements Serializable {
 
 
     public static ArrayList<Card> all() {
+        long count = SQLite.select(Method.count()).from(Card.class).count();
+        Log.d("CardModel", String.valueOf(count));
         return (ArrayList<Card>) SQLite.select().from(Card.class).queryList();
     }
 }

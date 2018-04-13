@@ -17,7 +17,7 @@ import java.util.Date;
 public class Payment implements Serializable {
 
     @Column
-    @PrimaryKey
+    @PrimaryKey (autoincrement=true)
     private int id;
 
     @Column

@@ -16,11 +16,11 @@ import java.util.List;
 
 public class User {
 
-    public static boolean hasVendorProfile() {
-        return false;
-    }
-
     public static boolean hasCard() {
         return SQLite.select(Method.count()).from(Card.class).hasData();
+    }
+
+    public static boolean hasVendorProfile() {
+        return SQLite.select(Method.count()).from(Vendor.class).hasData();
     }
 }

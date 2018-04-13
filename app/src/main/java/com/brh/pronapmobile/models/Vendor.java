@@ -1,8 +1,13 @@
 package com.brh.pronapmobile.models;
 
+import android.util.Log;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Method;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,10 +16,10 @@ import java.util.ArrayList;
  * Created by Keitel on 4/11/18.
  */
 @Table(database = PronapDatabase.class)
-public class Vendor implements Serializable {
+public class Vendor extends BaseModel implements Serializable {
 
     @Column
-    @PrimaryKey
+    @PrimaryKey (autoincrement=true)
     private int id;
 
     @Column
@@ -105,5 +110,11 @@ public class Vendor implements Serializable {
 
     public void addPayment(Payment payment) {
         payments.add(payment);
+    }
+
+    public static ArrayList<Vendor> all() {
+        long count = SQLite.select(Method.count()).from(Vendor.class).count();
+        Log.d("VendorModel", String.valueOf(count));
+        return (ArrayList<Vendor>) SQLite.select().from(Vendor.class).queryList();
     }
 }
