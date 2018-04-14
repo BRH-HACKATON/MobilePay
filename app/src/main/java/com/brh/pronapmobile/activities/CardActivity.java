@@ -45,7 +45,7 @@ public class CardActivity extends AppCompatActivity {
         if (supportActionBar != null) {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
 
-            supportActionBar.setTitle("Vos Applications");
+            supportActionBar.setTitle("Vos Cartes Débit");
         }
 
         // initialize Card ArrayList

@@ -16,7 +16,6 @@ import java.util.ArrayList;
 /**
  * Created by Keitel on 4/11/18.
  */
-
 @Table(database = PronapDatabase.class)
 public class Card extends BaseModel implements Serializable {
 

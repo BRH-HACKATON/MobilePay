@@ -2,6 +2,8 @@ package com.brh.pronapmobile.adapters;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +28,12 @@ public class CardArrayAdapter extends ArrayAdapter<Card> {
         super(context, android.R.layout.simple_list_item_1, list);
     }
 
+    @Override
+    public View getDropDownView(int position, @Nullable View convertView,
+                                @NonNull ViewGroup parent) {
+        return getView(position, convertView, parent);
+    }
+
     //custom view to populate data
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -41,6 +49,7 @@ public class CardArrayAdapter extends ArrayAdapter<Card> {
         }
 
         TextView tvNumber = convertView.findViewById(R.id.tvNumber);
+        TextView tvHolder = convertView.findViewById(R.id.tvHolder);
         TextView tvExpiry = convertView.findViewById(R.id.tvExpiry);
 
         if(card.getNumber() != null){
@@ -49,6 +58,10 @@ public class CardArrayAdapter extends ArrayAdapter<Card> {
             // Add only the 4 last Digits
             hiddenText += card.getNumber().substring(Math.max(card.getNumber().length() - 4, 0), card.getNumber().length());
             tvNumber.setText(hiddenText);
+        }
+
+        if(card.getHolder() != null){
+            tvHolder.setText(card.getHolder());
         }
 
         if(card.getExpiry() != null){

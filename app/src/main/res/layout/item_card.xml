@@ -22,16 +22,25 @@
             android:textSize="18sp"/>
 
         <TextView
-            android:id="@+id/tvExpiry"
+            android:id="@+id/tvHolder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvNumber"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="36dp"
-            android:layout_marginBottom="36dp"
+            android:layout_marginTop="13dp"
+            android:text="CARD HOLDER NAME"
+            android:textColor="#fff"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvExpiry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/tvNumber"
+            android:layout_alignTop="@+id/imageView"
             android:text="01/1900"
             android:textColor="#fff"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <ImageView
             android:layout_width="30dp"
@@ -41,7 +50,8 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:src="@drawable/ic_credit_card_black_24dp"
-            android:tint="#fff" />
+            android:tint="#fff"
+            android:id="@+id/imageView" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -1,105 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:background="@color/colorPrimary"
-  android:fitsSystemWindows="true">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
+    android:background="@color/colorPrimary">
 
-  <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/background"
-    android:orientation="vertical"
-    android:paddingLeft="24dp"
-    android:paddingRight="24dp"
-    android:paddingTop="24dp">
-
-    <ImageView
-      android:layout_width="150dp"
-      android:layout_height="150dp"
-      android:layout_gravity="center_horizontal"
-      android:layout_marginBottom="24dp"
-      android:contentDescription="TODO"
-      android:src="@drawable/logo_blue" />
-
-    <TextView
-      android:id="@+id/appName"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="24dp"
-      android:gravity="center"
-      android:text="@string/app_name"
-      android:textColor="@color/white"
-      android:textSize="@dimen/article_titles" />
-
-    <!-- Email Label -->
-    <android.support.design.widget.TextInputLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
-      android:layout_marginTop="8dp">
-
-      <android.support.design.widget.TextInputEditText
-        android:id="@+id/email"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:textColorLink="@color/white" />
-    </android.support.design.widget.TextInputLayout>
+        android:paddingTop="24dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp">
 
-    <!-- Password Label -->
-    <android.support.design.widget.TextInputLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
-      android:layout_marginTop="8dp"
-      android:textColorHint="@color/white">
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="0dp"
+            android:src="@drawable/logo_blue" />
 
-      <android.support.design.widget.TextInputEditText
-        android:id="@+id/password"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="2dp"
+            android:text="PRONAP"
+            android:textColor="#fff"
+            android:textSize="24sp"
+            android:fontFamily="sans-serif-condensed"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="18dp"
+            android:text="Paiement Mobile simple et sécurisé"
+            android:textColor="#fff" />
+
+        <!-- Email Label -->
+        <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:textColorLink="@color/white" />
-    </android.support.design.widget.TextInputLayout>
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:theme="@style/Account.Input.TextInputLayout"
+        android:id="@+id/email">
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:hint="@string/email"
+            android:textColor="#fff"/>
+        </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputEditText
-      android:id="@+id/password3"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:hint="@string/password_confirmation"
-      android:inputType="textPassword"
-      android:textColor="@color/white"
-      android:textColorHint="@color/white"
-      android:textColorLink="@color/white" />
+        <!-- Password -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:theme="@style/Account.Input.TextInputLayout"
+            android:id="@+id/password">
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="@string/password"
+                android:textColor="#fff"/>
+        </android.support.design.widget.TextInputLayout>
 
-    <android.support.v7.widget.AppCompatButton
-      android:id="@+id/btnLogin"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="24dp"
-      android:layout_marginTop="24dp"
-      android:background="@color/colorPrimaryDark"
-      android:padding="12dp"
-      android:text="@string/login"
-      android:textColor="@color/white" />
+        <!-- Password Confirmation Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:theme="@style/Account.Input.TextInputLayout"
+            android:id="@+id/passwordConfirmation">
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="@string/password_confirmation"
+                android:textColor="#fff"/>
+        </android.support.design.widget.TextInputLayout>
 
-    <TextView
-      android:id="@+id/tvRegister"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="24dp"
-      android:gravity="center"
-      android:text="@string/account_proposal"
-      android:textSize="16sp" />
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btnLogin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:padding="12dp"
+            android:text="@string/login"
+        style="@style/Account.Input.ProceedButton"/>
 
-  </LinearLayout>
+        <TextView android:id="@+id/tvForgetPassword"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="Mot de passe oublié?"
+            android:gravity="center"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
 </ScrollView>
