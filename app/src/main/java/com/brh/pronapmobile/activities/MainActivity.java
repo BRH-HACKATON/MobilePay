@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             //supportActionBar.setDisplayUseLogoEnabled(true);
             //supportActionBar.setDisplayShowTitleEnabled(true);
             //supportActionBar.setIcon(R.drawable.logo_blue);
-            //supportActionBar.setTitle(R.string.app_name);
+            supportActionBar.setTitle("BRH - Pronap Mobile");
             supportActionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white);
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -107,6 +107,14 @@ public class MainActivity extends AppCompatActivity {
 
         listPayments();
 
+    }
+
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+
+        listPayments();
     }
 
     @Override
@@ -158,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         fabBuyer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO : Check if User does not have debit card to propose to create new one
+                // Check if User does not have debit card to propose to create new one
                 if(User.hasCard()) {
                     scanQRCode();
                 } else {

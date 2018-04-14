@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.brh.pronapmobile.R;
 import com.brh.pronapmobile.models.Payment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -47,15 +48,24 @@ public class PaymentArrayAdapter extends ArrayAdapter<Payment> {
         }
 
         TextView tvVendor = convertView.findViewById(R.id.tvVendor);
-        /*TextView tvDate = convertView.findViewById(R.id.tvDate);
-        TextView tvAmount = convertView.findViewById(R.id.tvAmount);;*/
+        TextView tvDate = convertView.findViewById(R.id.tvDate);
+        TextView tvAmount = convertView.findViewById(R.id.tvAmount);
+        TextView tvHolder = convertView.findViewById(R.id.tvHolder);
 
-        /*if(payment.getAmount() != null) {
-            tvAmount.setText(String.valueOf(payment.getAmount()));
-        }*/
+        if(payment.getAmount() != null) {
+            tvAmount.setText(String.valueOf(payment.getAmount()) + " gdes");
+        }
 
         if(payment.getVendorName() != null) {
-            tvVendor.setText(String.valueOf(payment.getVendorName()));
+            tvVendor.setText(payment.getVendorName());
+        }
+
+        if(payment.getDate() != null) {
+            tvDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(payment.getDate()));
+        }
+
+        if(payment.getCardHolder() != null) {
+            tvHolder.setText(payment.getCardHolder());
         }
 
         return convertView;
