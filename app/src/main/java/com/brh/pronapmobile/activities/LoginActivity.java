@@ -25,6 +25,8 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKeyFactory;
 
+import static android.view.View.GONE;
+
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
@@ -37,6 +39,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout tilPassword;
     private TextInputLayout tilPasswordConf;
     private String hashedPassword;
+
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,19 +61,28 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // only 1 User record will be in database (user_id = 1)
-        // If User is already in database, goto MainActivity
-        if(User.isLoggedIn()) {
-            // Login directly
-            onLoginSuccess();
-        }
+        // If User is already in database and is logged in, goto MainActivity
+        // else if User is in database and logged out, display only one password
 
-        tvForget.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(LoginActivity.this, "Un Code de réinitialisation a été envoyé sur votre email",
-                        Toast.LENGTH_LONG).show();
+        user = User.find(1);
+
+        if(user != null) {
+            if (user.getStatus() == 1) {
+                // Login directly
+                onLoginSuccess();
+            } else {
+                // user is logged out
+                tilPasswordConf.setVisibility(GONE);
             }
-        });
+
+            tvForget.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(LoginActivity.this, "Un Code de réinitialisation a été envoyé sur votre email",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+        }
 
     }
 
@@ -77,16 +90,19 @@ public class LoginActivity extends AppCompatActivity {
     public void login() {
         Log.d(TAG, "Login");
 
-        // TODO : Validate inputs
-        if (!validate()) {
-            onLoginFailed();
-            return;
+        String email = tilEmail.getEditText().getText().toString();
+        String password = tilPassword.getEditText().getText().toString();
+
+        // if User exists then try to connect him instead of registering him, so SKIP VALIDATION
+        if(user == null) {
+            // TODO : Validate inputs
+            if (!validate()) {
+                onLoginFailed();
+                return;
+            }
         }
 
         buttonLogin.setEnabled(false);
-
-        String email = tilEmail.getEditText().getText().toString();
-        String password = tilPassword.getEditText().getText().toString();
 
         String hashedPassword = HashGenerator.sha1(password);
         if(hashedPassword != null) {

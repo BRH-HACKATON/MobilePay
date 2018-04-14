@@ -40,6 +40,8 @@ dependencies {
     // sql-cipher database encryption (optional)
     compile "com.github.raizlabs.dbflow:dbflow-sqlcipher:${dbflow_version}"
 
+    implementation 'com.github.clans:fab:1.6.4'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'

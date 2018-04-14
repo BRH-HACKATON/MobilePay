@@ -1,6 +1,8 @@
 package com.brh.pronapmobile.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,12 @@ public class VendorArrayAdapter extends ArrayAdapter<Vendor> {
     //constructor
     public VendorArrayAdapter(Context context, ArrayList<Vendor> list) {
         super(context, android.R.layout.simple_list_item_1, list);
+    }
+
+    @Override
+    public View getDropDownView(int position, @Nullable View convertView,
+                                @NonNull ViewGroup parent) {
+        return getView(position, convertView, parent);
     }
 
     //custom view to populate data

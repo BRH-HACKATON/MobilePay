@@ -94,7 +94,15 @@ public class CreateVendorFragment extends Fragment {
     }
 
     public boolean validate() {
-        // TODO : implement validation to return true or false
+        if(tilName.getEditText().getText().toString().equals("") ||
+                tilCode.getEditText().getText().toString().equals("") ||
+                tilAccount.getEditText().getText().toString().equals("") ||
+                tilRouting.getEditText().getText().toString().equals("") ||
+                tilPhone.getEditText().getText().toString().equals("")) {
+
+            return false;
+        }
+
         return true;
     }
 

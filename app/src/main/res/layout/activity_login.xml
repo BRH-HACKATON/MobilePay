@@ -20,7 +20,7 @@
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="0dp"
-            android:src="@drawable/brh_blue_logo" />
+            android:src="@drawable/logo_blue" />
 
         <TextView
             android:layout_width="match_parent"
@@ -102,7 +102,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="Mot de passe oublié? Récupérez-le!"
+            android:text="Mot de passe oublié?"
             android:gravity="center"
             android:textSize="16sp"/>
 

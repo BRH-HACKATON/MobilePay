@@ -1,12 +1,8 @@
 package com.brh.pronapmobile.activities;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,24 +12,24 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brh.pronapmobile.R;
-import com.brh.pronapmobile.fragments.MakePaymentFragment;
-import com.brh.pronapmobile.fragments.RequestPaymentFragment;
+import com.brh.pronapmobile.adapters.PaymentArrayAdapter;
 
-import com.brh.pronapmobile.models.Card;
+import com.brh.pronapmobile.models.Payment;
 import com.brh.pronapmobile.models.User;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static android.view.View.GONE;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,18 +39,13 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private FloatingActionButton fabBuyer;
     private FloatingActionButton fabVendor;
-
-    // by default all Users come with No role
-    private UserRole activeRole = UserRole.NONE;
-    private Card currentCard;
+    private FloatingActionMenu faMenu;
 
     private IntentIntegrator qrScan;
 
-    private enum UserRole{
-        BUYER,
-        VENDOR,
-        NONE
-    }
+    private ArrayList<Payment> payments;
+    private PaymentArrayAdapter aPayments;
+    private ListView lvPayments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +71,16 @@ public class MainActivity extends AppCompatActivity {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // initialize Card ArrayList
+        payments = new ArrayList<>();
+        // initialize Card Array Adapter
+        aPayments = new PaymentArrayAdapter(this, payments);
+        // find list view
+        lvPayments = findViewById(R.id.lvPayments);
+        // connect adapter to list view
+        lvPayments.setAdapter(aPayments);
+
+
         // Set behavior of Navigation drawer
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -104,8 +105,7 @@ public class MainActivity extends AppCompatActivity {
         // Setup Floating Action Button
         setupFloatingActionButtons();
 
-        // Set Listener to Menu Items Role CheckBox
-        setupListenerForRoles();
+        listPayments();
 
     }
 
@@ -144,57 +144,15 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), VendorActivity.class));
         } else if (id == R.id.nav_card) {
             startActivity(new Intent(getApplicationContext(), CardActivity.class));
+        } else if (id == R.id.nav_logout) {
+            logout();
         }
     }
 
-    public void setupListenerForRoles() {
-        // Set Listener to Menu Items Role CheckBox
-        final MenuItem vendorSwitchItem = navigationView.getMenu().findItem(R.id.nav_vendor_role);
-        final CompoundButton vendorSwitchView = (CompoundButton) MenuItemCompat.getActionView(vendorSwitchItem);
-
-        final MenuItem buyerSwitchItem = navigationView.getMenu().findItem(R.id.nav_buyer_role);
-        final CompoundButton buyerSwitchView = (CompoundButton) MenuItemCompat.getActionView(buyerSwitchItem);
-
-        vendorSwitchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    buyerSwitchView.setChecked(false);
-                } else {
-                    if(!buyerSwitchView.isChecked())
-                        vendorSwitchView.setChecked(true);
-                }
-
-                // Set active Role to Vendor either case
-                activeRole = UserRole.VENDOR;
-                fabBuyer.setVisibility(GONE);
-                fabVendor.setVisibility(View.VISIBLE);
-            }
-        });
-
-        buyerSwitchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    vendorSwitchView.setChecked(false);
-                } else {
-                    if(!vendorSwitchView.isChecked())
-                        buyerSwitchView.setChecked(true);
-                }
-
-                // Set active Role to Buyer either case
-                activeRole = UserRole.BUYER;
-                fabVendor.setVisibility(GONE);
-                fabBuyer.setVisibility(View.VISIBLE);
-            }
-        });
-
-        if(activeRole == UserRole.BUYER) {
-            buyerSwitchView.setChecked(true);
-        } else if(activeRole == UserRole.VENDOR) {
-            vendorSwitchView.setChecked(true);
-        }
-    }
 
     public void setupFloatingActionButtons() {
+        faMenu = findViewById(R.id.faMenu);
+
         // Adding Floating Action Buttons to bottom right of main view
         fabBuyer = findViewById(R.id.fabBuyer);
         fabBuyer.setOnClickListener(new View.OnClickListener() {
@@ -236,18 +194,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void requestPayment() {
-        fabBuyer.setVisibility(GONE);
-        fabVendor.setVisibility(GONE);
-
-        FragmentManager fm = getSupportFragmentManager();
-        RequestPaymentFragment fragment = new RequestPaymentFragment();
-        fm.beginTransaction().replace(R.id.flMainContent, fragment).commit();
+        Intent i = new Intent(this, RequestPaymentActivity.class);
+        i.putExtra("create", true);
+        startActivity(i);
     }
 
     public void scanQRCode() {
-        fabBuyer.setVisibility(GONE);
-        fabVendor.setVisibility(GONE);
-
         //intializing scan object
         qrScan = new IntentIntegrator(this);
         qrScan.initiateScan();
@@ -266,13 +218,11 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     //converting the data to json
                     JSONObject obj = new JSONObject(result.getContents());
-                    Log.d(TAG, result.getContents());
+                    //Log.d(TAG, result.getContents());
 
-                    //Display MakePaymentFragment
-
-                    FragmentManager fm = getSupportFragmentManager();
-                    MakePaymentFragment fragment = MakePaymentFragment.newInstance(result.getContents());
-                    fm.beginTransaction().replace(R.id.flMainContent, fragment).commitAllowingStateLoss();;
+                    Intent i = new Intent(this, MakePaymentActivity.class);
+                    i.putExtra("qrCodeString", result.getContents());
+                    startActivity(i);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -288,12 +238,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void displayFloatingButtons() {
-        if(fabBuyer != null)
-            fabBuyer.setVisibility(View.VISIBLE);
 
-        if(fabVendor != null)
-            fabVendor.setVisibility(View.VISIBLE);
+    public void logout() {
+        User user = User.find(1);
+        user.setStatus(0);
+        user.save();
+
+        finish();
+    }
+
+    public void listPayments() {
+        lvPayments.setVisibility(View.VISIBLE);
+        aPayments.clear();
+
+        // retrieve all cards from DB
+        payments = Payment.all();
+
+        aPayments.addAll(payments);
+        aPayments.notifyDataSetChanged();
     }
 
 }
