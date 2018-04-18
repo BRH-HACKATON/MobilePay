@@ -5,11 +5,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +33,7 @@ import java.util.Calendar;
 
 public class MakePaymentActivity extends AppCompatActivity {
 
-    public static final String TAG = "MakePaymentFragment";
+    public static final String TAG = "MakePaymentActivity";
 
     private View rootView;
     private JSONObject paymentData = null;
@@ -42,7 +45,7 @@ public class MakePaymentActivity extends AppCompatActivity {
     private AppCompatButton payButton;
     private AppCompatButton cancelButton;
 
-    private Spinner spinnerCards;
+    private RecyclerView rvCards;
 
     private ArrayList<Card> cards;
     private CardArrayAdapter aCards;
@@ -72,16 +75,23 @@ public class MakePaymentActivity extends AppCompatActivity {
         tvProduct = findViewById(R.id.tvProduct);
         payButton = findViewById(R.id.pay);
         cancelButton = findViewById(R.id.cancel_payment);
-        spinnerCards = findViewById(R.id.spinnerCards);
+        rvCards = findViewById(R.id.rvCards);
 
         // initialize Card ArrayList
         cards = new ArrayList<>();
         // initialize Card Array Adapter
-        aCards = new CardArrayAdapter(this, cards);
+        aCards = new CardArrayAdapter(this, cards, true);
         // connect adapter to list view
-        spinnerCards.setAdapter(aCards);
+        rvCards.setAdapter(aCards);
+        LinearLayoutManager horizontalLayoutManager
+                = new LinearLayoutManager(MakePaymentActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        rvCards.setLayoutManager(horizontalLayoutManager);
+
 
         listCards();
+
+        // Select default position (0 for now) TODO : Setup default position in Settings
+        aCards.selectItem(0);
 
         // Change String JSONObject
         String qrCodeString = getIntent().getStringExtra("qrCodeString");
@@ -115,12 +125,12 @@ public class MakePaymentActivity extends AppCompatActivity {
 
 
     public void listCards() {
-        aCards.clear();
+        rvCards.setVisibility(View.VISIBLE);
 
         // retrieve all cards from DB
         cards = Card.all();
 
-        aCards.addAll(cards);
+        aCards.setCards(cards);
         aCards.notifyDataSetChanged();
     }
 
@@ -149,7 +159,8 @@ public class MakePaymentActivity extends AppCompatActivity {
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                payButton.setEnabled(false);
+                // Log card
+                Log.d(TAG, "Paying using Card : " + aCards.getSelectedItem().getNumber());
                 // Send SMS to Phone Number
                 sendSMS();
             }
@@ -165,9 +176,11 @@ public class MakePaymentActivity extends AppCompatActivity {
     }
 
     public void sendSMS() {
+        payButton.setEnabled(false);
         try {
             // TODO : replace the values later with attributes from Vendor Model
-            Card card = (Card) spinnerCards.getSelectedItem();
+            Card card = (Card) aCards.getItem(0);
+
             if(card != null) {
                 Log.d(TAG, "Card Selected: " + card.getHolder());
 

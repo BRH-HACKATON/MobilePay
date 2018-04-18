@@ -9,127 +9,134 @@
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/main_content"
+        android:id="@+id/coordinator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#fff">
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="60dp">
+            android:layout_height="wrap_content">
 
-
-            <LinearLayout android:id="@+id/llPaymentQRCode"
-                android:orientation="vertical"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:visibility="gone">
+                android:orientation="vertical"
+                android:layout_margin="8dp"
+                app:layout_constraintTop_toBottomOf="@id/appbar">
 
-                <ImageView android:id="@+id/qrCode"
-                    android:layout_width="250dp"
-                    android:layout_height="250dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="24dp"/>
 
-                <TextView android:id="@+id/tvQRCodeDirective"
-                    android:layout_width="fill_parent"
+                <LinearLayout android:id="@+id/llPaymentQRCode"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/qr_code_directive"
-                    android:gravity="center"
-                    android:textSize="18sp"/>
+                    android:padding="8dp"
+                    android:visibility="gone">
+
+                    <ImageView android:id="@+id/qrCode"
+                        android:layout_width="250dp"
+                        android:layout_height="250dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="24dp"/>
+
+                    <TextView android:id="@+id/tvQRCodeDirective"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/qr_code_directive"
+                        android:gravity="center"
+                        android:textSize="18sp"/>
+
+                </LinearLayout>
+
+                <LinearLayout android:id="@+id/llPaymentInfo"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp">
+
+                    <TextView android:id="@+id/requestPaymentTitle"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="24dp"
+                        android:text="@string/request_payment_title"
+                        android:gravity="center"
+                        android:textSize="20sp"/>
+
+                    <!-- Product Description -->
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp">
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/product"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:hint="@string/product_description"/>
+                    </android.support.design.widget.TextInputLayout>
+
+                    <!-- Price -->
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_gravity="end">
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/price"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text|numberDecimal"
+                            android:hint="@string/price"/>
+                    </android.support.design.widget.TextInputLayout>
+
+                    <!-- BRH Bank Account Choice -->
+                    <Spinner
+                        android:id="@+id/spinnerVendors"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="8dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        android:layout_marginLeft="8dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:spinnerMode="dropdown" />
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/generate"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginBottom="24dp"
+                        android:padding="12dp"
+                        android:text="@string/generate_code"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
-            <LinearLayout android:id="@+id/llPaymentInfo"
-                android:orientation="vertical"
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp">
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-                <TextView android:id="@+id/requestPaymentTitle"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    android:text="@string/request_payment_title"
-                    android:gravity="center"
-                    android:textSize="20sp"/>
-
-                <!-- Product Description -->
-                <android.support.design.widget.TextInputLayout
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp">
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/product"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:hint="@string/product_description"/>
-                </android.support.design.widget.TextInputLayout>
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    app:layout_scrollFlags="scroll|enterAlways"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-                <!-- Price -->
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_gravity="end">
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/price"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text|numberDecimal"
-                        android:hint="@string/price"/>
-                </android.support.design.widget.TextInputLayout>
+            </android.support.design.widget.AppBarLayout>
 
-                <!-- BRH Bank Account Choice -->
-                <Spinner
-                    android:id="@+id/spinnerVendors"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginLeft="8dp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:spinnerMode="dropdown" />
+        </android.support.constraint.ConstraintLayout>
 
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/generate"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="24dp"
-                    android:padding="12dp"
-                    android:text="@string/generate_code"/>
-
-            </LinearLayout>
-        </LinearLayout>
-
-
-
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-        </android.support.design.widget.AppBarLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 

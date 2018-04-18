@@ -49,7 +49,10 @@
             android:name=".activities.CardActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".activities.RequestPaymentActivity" />
-        <activity android:name=".activities.MakePaymentActivity"></activity>
+        <activity android:name=".activities.MakePaymentActivity"/>
+
+        <!-- Activities from Packages -->
+        <activity android:name="com.cooltechworks.creditcarddesign.CardEditActivity"/>
     </application>
 
 </manifest>
