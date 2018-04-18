@@ -6,43 +6,48 @@
     android:layout_height="match_parent"
     tools:context="com.brh.pronapmobile.activities.VendorActivity">
 
-    <FrameLayout
-        android:id="@+id/flVendor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:paddingTop="56dp"/>
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/lvVendors"
-        android:layout_marginTop="56dp"
-        android:divider="#CCC"
-        android:dividerHeight="12dp"/>
-
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/main_content"
+        android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appbar"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+            <FrameLayout
+                android:id="@+id/flVendor"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/appbar"/>
 
-        </android.support.design.widget.AppBarLayout>
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/appbar"
+                android:id="@+id/lvVendors"
+                android:divider="#DDD"
+                android:dividerHeight="6dp"/>
+
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    app:layout_scrollFlags="scroll|enterAlways"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+            </android.support.design.widget.AppBarLayout>
+
+        </android.support.constraint.ConstraintLayout>
 
 
         <android.support.design.widget.FloatingActionButton

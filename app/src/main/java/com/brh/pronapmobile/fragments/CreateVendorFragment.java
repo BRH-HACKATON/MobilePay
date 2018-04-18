@@ -100,6 +100,7 @@ public class CreateVendorFragment extends Fragment {
                 tilRouting.getEditText().getText().toString().equals("") ||
                 tilPhone.getEditText().getText().toString().equals("")) {
 
+            Toast.makeText(getContext(), "Vous devez rentrer tous les Champs!", Toast.LENGTH_LONG).show();
             return false;
         }
 
