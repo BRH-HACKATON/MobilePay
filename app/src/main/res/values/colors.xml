@@ -8,4 +8,14 @@
     <color name="dark_grey">#424242</color>
     <color name="medium_grey">#9E9E9E</color>
     <color name="button_grey">#757575</color>
+
+    <!-- THEME BRH LIGHT BACKGROUND -->
+    <color name="colorPrimaryBasic">#3260a2</color>
+    <color name="colorPrimaryDarkBasic">#ff203d68</color>
+    <color name="colorAccentBasic">#e46c0a</color>
+    <color name="colorVariantPrimaryBasic">#8ac13e</color>
+    <color name="colorVariantSecondaryBasic">#3393cf</color>
+    <color name="colorDarkGreyBasic">#a0a1a3</color>
+    <color name="colorLightGreyBasic">#dee1e3</color>
+    <color name="colorWhiteBasic">#fcfdfd</color>
 </resources>

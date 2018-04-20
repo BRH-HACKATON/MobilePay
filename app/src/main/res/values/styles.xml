@@ -23,4 +23,22 @@
         <item name="android:background">@color/colorPrimaryDark</item>
     </style>
 
+
+
+
+    <!-- THEME BRH BASIC LIGHT BACKGROUND -->
+    <style name="AppThemeBasic" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryBasic</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkBasic</item>
+        <item name="colorAccent">@color/colorAccentBasic</item>
+
+        <!--item name="android:background">@color/colorLightGreyBasic</item-->
+    </style>
+
+    <style name="ValidateButton" >
+        <item name="android:textColor">@color/colorWhiteBasic</item>
+        <item name="android:background">@color/colorVariantSecondaryBasic</item>
+    </style>
+
 </resources>
