@@ -56,13 +56,17 @@ public class CardActivity extends AppCompatActivity {
         // initialize Card ArrayList
         cards = new ArrayList<>();
         // initialize Card Array Adapter
-        aCards = new CardArrayAdapter(this, cards);
+        aCards = new CardArrayAdapter(cards);
         // find list view
         rvCards = findViewById(R.id.rvCards);
         // connect adapter to list view
         rvCards.setAdapter(aCards);
         // Set layout manager to position the items
         rvCards.setLayoutManager(new LinearLayoutManager(this));
+
+        // set RecyclerView animation on items
+        // jp.wasabeef.recyclerview.animators.{Animators Class}
+        rvCards.setItemAnimator(new jp.wasabeef.recyclerview.animators.FadeInLeftAnimator());
 
         // Adding Floating Action Button to bottom right of main view
         fab = (FloatingActionButton) findViewById(R.id.fab);

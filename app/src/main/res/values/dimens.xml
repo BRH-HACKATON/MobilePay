@@ -20,4 +20,7 @@
 
     <!--Floating action button-->
     <dimen name="design_fab_image_size" tools:override="true">36dp</dimen>
+
+    <dimen name="button_height">48dp</dimen>
+    <dimen name="button_vertical_margin">24dp</dimen>
 </resources>

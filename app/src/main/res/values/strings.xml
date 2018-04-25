@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Pronap Mobile</string>
+    <string name="brh_name">Banque de la République d\'Haïti</string>
+    <string name="pronap_acronym">PRONAP</string>
+    <string name="pronap_slogan">Paiement Mobile simple et sécurisé</string>
 
     <!-- Account String -->
     <string name="account_proposal">Pas de compte? Créer un nouveau</string>
@@ -10,6 +13,7 @@
     <string name="full_name">Nom Complet</string>
     <string name="register_title">Créer un Compte PRONAP-MOBILE</string>
     <string name="register">Créer Compte</string>
+    <string name="password_forgotten">Mot de passe oublié?</string>
 
     <!-- Vendor Account -->
     <string name="code">Effectuer Paiement</string>
