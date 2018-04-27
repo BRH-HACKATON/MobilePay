@@ -39,8 +39,8 @@
     <!--color name="colorPrimaryBasic">#3260a2</color-->
     <color name="colorPrimaryBasic">#ff203d68</color>
     <color name="colorPrimaryDarkBasic">#ff102634</color>
-    <color name="colorAccentBasic">#e46c0a</color>
-    <color name="colorVariantPrimaryBasic">#3393cf</color>
+    <color name="colorAccentBasic">#3393cf</color>
+    <color name="colorVariantPrimaryBasic">#e46c0a</color>
     <color name="colorVariantSecondaryBasic">#8ac13e</color>
     <color name="colorWritingLightBasic">#dee1e3</color>
     <color name="colorWritingBasic">#a0a1a3</color>

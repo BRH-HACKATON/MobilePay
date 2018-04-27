@@ -1,8 +1,6 @@
 package com.brh.pronapmobile.activities;
 
 import android.graphics.Bitmap;
-import android.nfc.Tag;
-import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,20 +14,19 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brh.pronapmobile.R;
 import com.brh.pronapmobile.adapters.CardArrayAdapter;
+import com.brh.pronapmobile.utils.AlertMessage;
 import com.brh.pronapmobile.fragments.PinDialogFragment;
 import com.brh.pronapmobile.models.Card;
 import com.brh.pronapmobile.models.Payment;
 import com.brh.pronapmobile.utils.BitmapEncoder;
 import com.brh.pronapmobile.utils.MiddleItemFinder;
 import com.brh.pronapmobile.utils.SMSUtils;
-import com.cooltechworks.creditcarddesign.CreditCardView;
 import com.google.zxing.WriterException;
 
 import org.json.JSONObject;
@@ -39,14 +36,10 @@ import java.util.Calendar;
 
 import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
 
-import static android.view.View.GONE;
-import static android.view.View.generateViewId;
-
 public class MakePaymentActivity extends AppCompatActivity {
 
     public static final String TAG = "MakePaymentActivity";
 
-    private View rootView;
     private JSONObject paymentData = null;
 
     private ImageView ivQRCode;
@@ -180,6 +173,7 @@ public class MakePaymentActivity extends AppCompatActivity {
             tvVendor.setText(paymentData.getString("vendor_name"));
             tvPrice.setText(paymentData.getString("price"));
             tvProduct.setText(paymentData.getString("product"));
+
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -200,9 +194,13 @@ public class MakePaymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Log card
-                Log.d(TAG, "Paying using Card : " + aCards.getSelectedItem().getNumber());
+                //Log.d(TAG, "Paying using Card : " + aCards.getSelectedItem().getMaskedNumber());
                 // Send SMS to Phone Number
                 //sendSMS();
+
+                // Jump to SMS Payment
+                // TODO : Move the code below after Payment has been confirmed with Debit Card PIN
+                popupPaymentSuccess();
             }
         });
 
@@ -297,5 +295,26 @@ public class MakePaymentActivity extends AppCompatActivity {
 
     public void resumePayment() {
         payButton.setEnabled(true);
+    }
+
+    public void popupPaymentSuccess() {
+        AlertMessage alert = new AlertMessage(this);
+        alert.setBanner(R.drawable.mobile_money_transfer);
+        alert.setTitle("Paiement Effectué");
+        alert.setMessage("Votre Paiement a été effectué avec Succès");
+        alert.setHasPositiveButton(false);
+        alert.setPositiveText("VALIDER");
+        alert.setNegativeText("QUITTER");
+        alert.setModal(false);
+
+        alert.setOnPositiveClickListener(new AlertMessage.OnPositiveClickListener() {
+            @Override
+            public void onPositiveClick() {
+                Toast.makeText(MakePaymentActivity.this, "Positive Button Clicked", Toast.LENGTH_SHORT).show();
+                MakePaymentActivity.this.finish();
+            }
+        });
+
+        alert.show(ivQRCode);
     }
 }

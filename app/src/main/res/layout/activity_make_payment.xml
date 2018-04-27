@@ -13,48 +13,56 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_margin="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="130dp"
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:id="@+id/title"
+                    android:text="Vérifiez les Détails"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark" />
 
-                    <ImageView
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:id="@+id/message"
+                    android:text="Vérifiez si les détails du QR Code sont correctes pour le montant que vous allez payer."
+                    android:textSize="16sp"
+                    android:textColor="@color/colorWriting"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
+                android:background="@color/colorWritingLight">
+
+                <ImageView
                         android:id="@+id/ivQRCode"
                         android:layout_width="130dp"
                         android:layout_height="130dp"
                         android:layout_gravity="center_horizontal"/>
 
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/cancel_payment"
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:text="Rescanner"
-                        android:textSize="12sp"
-                        style="@style/NegativeButton"/>
-
-                </LinearLayout>
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
+                    android:layout_marginLeft="12dp"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
                         android:orientation="vertical">
 
                         <TextView
@@ -67,7 +75,6 @@
                             android:id="@+id/tvVendor"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
                             android:text="Nom Vendeur"
                             style="@style/Value.TextView" />
                     </LinearLayout>
@@ -75,7 +82,7 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="8dp"
                         android:orientation="vertical">
 
                         <TextView
@@ -88,7 +95,6 @@
                             android:id="@+id/tvPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
                             android:text="0.00 gdes"
                             style="@style/Value.TextView"/>
                     </LinearLayout>
@@ -96,7 +102,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="8dp"
                         android:orientation="vertical">
 
                         <TextView
@@ -109,7 +115,6 @@
                             android:id="@+id/tvProduct"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
                             android:text="Description Produit"
                             style="@style/Value.TextView"/>
                     </LinearLayout>
@@ -122,7 +127,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="36dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -145,16 +150,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_margin="16dp">
+                android:layout_marginBottom="36dp">
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/pay"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/button_height"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginEnd="24dp"
-                    android:text="Payer"
+                    android:text="PAYER"
                     style="@style/PositiveButton"/>
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/cancel_payment"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height"
+                    android:text="RESCANNER"
+                    style="@style/NegativeButton"/>
 
             </LinearLayout>
 
