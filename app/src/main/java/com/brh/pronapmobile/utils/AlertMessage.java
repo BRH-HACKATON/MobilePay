@@ -24,9 +24,14 @@ import com.brh.pronapmobile.R;
 public class AlertMessage {
 
     public AlertMessage.OnPositiveClickListener listener;
+    public AlertMessage.OnDismissListener dismissListener;
 
     public interface OnPositiveClickListener {
         void onPositiveClick();
+    }
+
+    public interface OnDismissListener {
+        void onDismiss();
     }
 
     private Context mContext;
@@ -196,11 +201,16 @@ public class AlertMessage {
             @Override
             public void run() {
                 popupWindow.dismiss();
+                dismissListener.onDismiss();
             }
         }, 50);
     }
 
     public void setOnPositiveClickListener(AlertMessage.OnPositiveClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setOnDismissListener(AlertMessage.OnDismissListener listener) {
+        this.dismissListener = listener;
     }
 }

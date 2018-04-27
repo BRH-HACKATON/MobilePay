@@ -307,10 +307,10 @@ public class MakePaymentActivity extends AppCompatActivity {
         alert.setNegativeText("QUITTER");
         alert.setModal(false);
 
-        alert.setOnPositiveClickListener(new AlertMessage.OnPositiveClickListener() {
+        alert.setOnDismissListener(new AlertMessage.OnDismissListener() {
             @Override
-            public void onPositiveClick() {
-                Toast.makeText(MakePaymentActivity.this, "Positive Button Clicked", Toast.LENGTH_SHORT).show();
+            public void onDismiss() {
+                Toast.makeText(MakePaymentActivity.this, "Alert Message dismissed", Toast.LENGTH_SHORT).show();
                 MakePaymentActivity.this.finish();
             }
         });
