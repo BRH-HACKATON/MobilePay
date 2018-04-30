@@ -6,23 +6,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brh.pronapmobile.R;
 import com.brh.pronapmobile.adapters.CardArrayAdapter;
+import com.brh.pronapmobile.utils.AlertMessage;
 import com.brh.pronapmobile.fragments.PinDialogFragment;
 import com.brh.pronapmobile.models.Card;
 import com.brh.pronapmobile.models.Payment;
 import com.brh.pronapmobile.utils.BitmapEncoder;
+import com.brh.pronapmobile.utils.MiddleItemFinder;
 import com.brh.pronapmobile.utils.SMSUtils;
 import com.google.zxing.WriterException;
 
@@ -31,11 +34,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
+
 public class MakePaymentActivity extends AppCompatActivity {
 
     public static final String TAG = "MakePaymentActivity";
 
-    private View rootView;
     private JSONObject paymentData = null;
 
     private ImageView ivQRCode;
@@ -46,6 +50,7 @@ public class MakePaymentActivity extends AppCompatActivity {
     private AppCompatButton cancelButton;
 
     private RecyclerView rvCards;
+    private LinearLayoutManager layoutManager;
 
     private ArrayList<Card> cards;
     private CardArrayAdapter aCards;
@@ -77,16 +82,23 @@ public class MakePaymentActivity extends AppCompatActivity {
         cancelButton = findViewById(R.id.cancel_payment);
         rvCards = findViewById(R.id.rvCards);
 
+        final RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(this) {
+            @Override protected int getHorizontalSnapPreference() {
+                return LinearSmoothScroller.SNAP_TO_START;
+            }
+        };
+
         // initialize Card ArrayList
         cards = new ArrayList<>();
         // initialize Card Array Adapter
-        aCards = new CardArrayAdapter(this, cards, true);
+        aCards = new CardArrayAdapter(cards, true, null);
+
         // connect adapter to list view
         rvCards.setAdapter(aCards);
-        LinearLayoutManager horizontalLayoutManager
-                = new LinearLayoutManager(MakePaymentActivity.this, LinearLayoutManager.HORIZONTAL, false);
-        rvCards.setLayoutManager(horizontalLayoutManager);
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        rvCards.setLayoutManager(layoutManager);
 
+        setupRecyclerViewCardsListeners();
 
         listCards();
 
@@ -134,12 +146,34 @@ public class MakePaymentActivity extends AppCompatActivity {
         aCards.notifyDataSetChanged();
     }
 
+    public void setupRecyclerViewCardsListeners() {
+        rvCards.setItemAnimator(new FadeInUpAnimator());
+
+        final SnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(rvCards);
+
+        MiddleItemFinder.MiddleItemCallback callback =
+                new MiddleItemFinder.MiddleItemCallback() {
+                    @Override
+                    public void scrollFinished(int middleElement) {
+                        // interaction with middle item
+                        Log.d(TAG, "Middle Item : " + middleElement);
+                        aCards.selectItem(middleElement);
+                    }
+                };
+
+        rvCards.addOnScrollListener(
+                new MiddleItemFinder(this, layoutManager,
+                        callback, RecyclerView.SCROLL_STATE_IDLE));
+    }
+
     public void loadPaymentViews(String qrCodeString) {
         //Log.d(TAG, "QR CODE JSONObject : " + paymentData.toString());
         try {
             tvVendor.setText(paymentData.getString("vendor_name"));
             tvPrice.setText(paymentData.getString("price"));
             tvProduct.setText(paymentData.getString("product"));
+
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -160,9 +194,13 @@ public class MakePaymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Log card
-                Log.d(TAG, "Paying using Card : " + aCards.getSelectedItem().getNumber());
+                //Log.d(TAG, "Paying using Card : " + aCards.getSelectedItem().getMaskedNumber());
                 // Send SMS to Phone Number
-                sendSMS();
+                //sendSMS();
+
+                // Jump to SMS Payment
+                // TODO : Move the code below after Payment has been confirmed with Debit Card PIN
+                popupPaymentSuccess();
             }
         });
 
@@ -257,5 +295,26 @@ public class MakePaymentActivity extends AppCompatActivity {
 
     public void resumePayment() {
         payButton.setEnabled(true);
+    }
+
+    public void popupPaymentSuccess() {
+        AlertMessage alert = new AlertMessage(this);
+        alert.setBanner(R.drawable.mobile_money_transfer);
+        alert.setTitle("Paiement Effectué");
+        alert.setMessage("Votre Paiement a été effectué avec Succès");
+        alert.setHasPositiveButton(false);
+        alert.setPositiveText("VALIDER");
+        alert.setNegativeText("QUITTER");
+        alert.setModal(false);
+
+        alert.setOnDismissListener(new AlertMessage.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                Toast.makeText(MakePaymentActivity.this, "Alert Message dismissed", Toast.LENGTH_SHORT).show();
+                MakePaymentActivity.this.finish();
+            }
+        });
+
+        alert.show(ivQRCode);
     }
 }

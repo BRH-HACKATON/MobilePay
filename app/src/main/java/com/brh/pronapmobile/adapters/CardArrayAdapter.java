@@ -3,6 +3,7 @@ package com.brh.pronapmobile.adapters;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -31,18 +32,23 @@ public class CardArrayAdapter extends RecyclerView.Adapter<CardArrayAdapter.View
     private boolean IS_SELECTABLE = false;
 
     // Store a member variable for the cards
-    private Context mContext;
     private ArrayList<Card> mCards;
     private int selectedPos = RecyclerView.NO_POSITION;
 
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position, CreditCardView creditCardView, ImageView ivCheck);
+    }
 
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public CreditCardView ccvCard;
+        public ImageView ivCheck;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -50,9 +56,59 @@ public class CardArrayAdapter extends RecyclerView.Adapter<CardArrayAdapter.View
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
-            itemView.setOnClickListener(this);
-
             ccvCard = itemView.findViewById(R.id.ccvCard);
+            ivCheck = itemView.findViewById(R.id.ivCheck);
+        }
+
+        public boolean isSelected(int position) {
+            return selectedPos == position;
+        }
+
+        public void bind(final int position, final OnItemClickListener listener) {
+            // Get the data model based on position
+            Card card = mCards.get(position);
+
+            // Highlight the background
+            //ccvCard.setBackgroundColor(selectedPos == position ? itemView.getContext().getResources().getColor(R.color.colorAccent) : Color.TRANSPARENT);
+            if(IS_SELECTABLE) {
+                // Scale Up if it's selected and Scale Down if it's not selected
+                if(isSelected(position)) {
+                    ccvCard.setScaleX(1f);
+                    ccvCard.setScaleY(1f);
+                    ivCheck.setVisibility(View.VISIBLE);
+                } else {
+                    ccvCard.setScaleX(0.8f);
+                    ccvCard.setScaleY(0.8f);
+                    ivCheck.setVisibility(View.GONE);
+                }
+            }
+
+            if(card.getNumber() != null){
+                ccvCard.setCardNumber(card.getMaskedNumber());
+            }
+
+            if(card.getHolder() != null){
+                ccvCard.setCardHolderName(card.getHolder());
+            }
+
+            if(card.getExpiry() != null){
+                ccvCard.setCardExpiry(card.getExpiry());
+            }
+
+            if(card.getCvv() != null){
+                ccvCard.setCVV("XXX");
+            }
+
+            //itemView was stored in a public final member variable that can be used
+            // to access the context from any ViewHolder instance.
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null) {
+                        listener.onItemClick(position, ccvCard, ivCheck);
+                    }
+                }
+            });
         }
 
 
@@ -78,16 +134,15 @@ public class CardArrayAdapter extends RecyclerView.Adapter<CardArrayAdapter.View
     }
 
     // Pass in the context, the card array into the constructor
-    public CardArrayAdapter(Context context, ArrayList<Card> cards) {
-        mContext = context;
+    public CardArrayAdapter(ArrayList<Card> cards) {
         mCards = cards;
     }
 
     // Pass in the context, the card array into the constructor and specify if item can be selected
-    public CardArrayAdapter(Context context, ArrayList<Card> cards, boolean isSelectable) {
-        mContext = context;
+    public CardArrayAdapter(ArrayList<Card> cards, boolean isSelectable, OnItemClickListener listener) {
         mCards = cards;
         IS_SELECTABLE = isSelectable;
+        this.listener = listener;
     }
 
 
@@ -108,28 +163,7 @@ public class CardArrayAdapter extends RecyclerView.Adapter<CardArrayAdapter.View
     // Involves populating data into the item through holder
     @Override
     public void onBindViewHolder(CardArrayAdapter.ViewHolder viewHolder, int position) {
-        // Get the data model based on position
-        Card card = mCards.get(position);
-
-        // Highlight the background
-        viewHolder.ccvCard.setBackgroundColor(selectedPos == position ? mContext.getResources().getColor(R.color.colorAccent) : Color.TRANSPARENT);
-
-        if(card.getNumber() != null){
-            viewHolder.ccvCard.setCardNumber(card.getMaskedNumber());
-        }
-
-        if(card.getHolder() != null){
-            viewHolder.ccvCard.setCardHolderName(card.getHolder());
-        }
-
-        if(card.getExpiry() != null){
-            viewHolder.ccvCard.setCardExpiry(card.getExpiry());
-        }
-
-        if(card.getCvv() != null){
-            viewHolder.ccvCard.setCVV("XXX");
-        }
-
+        viewHolder.bind(position, listener);
     }
 
     // Returns the total count of items in the list
@@ -146,7 +180,12 @@ public class CardArrayAdapter extends RecyclerView.Adapter<CardArrayAdapter.View
         if(IS_SELECTABLE) {
             // Below line is just like a safety check, because sometimes holder could be null,
             // in that case, getAdapterPosition() will return RecyclerView.NO_POSITION
-            if (position == RecyclerView.NO_POSITION) return;
+            if (position == RecyclerView.NO_POSITION)
+                return;
+
+            // prevent reassignment position
+            if(selectedPos == position)
+                return;
 
             // Updating old as well as new positions
             notifyItemChanged(selectedPos);

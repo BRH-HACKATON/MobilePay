@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorVariantPrimaryBasic">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="24dp"
+        android:paddingTop="8dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
@@ -19,16 +18,25 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="0dp"
             android:src="@drawable/logo_blue" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_marginTop="-38dp"
+            android:text="@string/brh_name"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="2dp"
-            android:text="PRONAP"
-            android:textColor="#fff"
+            android:text="@string/pronap_acronym"
+            android:textColor="@color/colorBack"
             android:textSize="24sp"
             android:fontFamily="sans-serif-condensed"
             android:textStyle="bold"/>
@@ -36,9 +44,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginBottom="18dp"
-            android:text="Paiement Mobile simple et sécurisé"
-            android:textColor="#fff" />
+            android:layout_marginBottom="24dp"
+            android:text="@string/pronap_slogan"
+            android:textColor="@color/colorBack" />
 
         <!-- Email Label -->
         <android.support.design.widget.TextInputLayout
@@ -53,7 +61,7 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:hint="@string/email"
-            android:textColor="#fff"/>
+            android:textColor="@color/colorBack"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Password -->
@@ -69,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:hint="@string/password"
-                android:textColor="#fff"/>
+                android:textColor="@color/colorBack"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Password Confirmation Label -->
@@ -85,24 +93,24 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:hint="@string/password_confirmation"
-                android:textColor="#fff"/>
+                android:textColor="@color/colorBack"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btnLogin"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="@dimen/button_vertical_margin"
+            android:layout_marginBottom="@dimen/button_vertical_margin"
             android:padding="12dp"
             android:text="@string/login"
-        style="@style/Account.Input.ProceedButton"/>
+            style="@style/Account.Input.ProceedButton"/>
 
         <TextView android:id="@+id/tvForgetPassword"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="Mot de passe oublié?"
+            android:text="@string/password_forgotten"
             android:gravity="center"
             android:textSize="16sp"/>
 

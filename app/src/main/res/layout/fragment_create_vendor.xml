@@ -1,94 +1,94 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:fitsSystemWindows="true">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="16dp"
+    tools:context=".activities.VendorActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <!-- Name -->
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
-
-        <!-- Name -->
-        <android.support.design.widget.TextInputLayout
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/vendor_name"
+        android:theme="@style/Entry.TextInputLayout">
+        <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:id="@+id/vendor_name">
-            <android.support.design.widget.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:hint="Nom de Vendeur (Commercial/Personnel)"/>
-        </android.support.design.widget.TextInputLayout>
+            android:inputType="text"
+            android:hint="Nom de Vendeur (Commercial/Personnel)"/>
+    </android.support.design.widget.TextInputLayout>
 
-        <!-- BRH Code -->
-        <android.support.design.widget.TextInputLayout
+    <!-- BRH Code -->
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/brh_code"
+        android:theme="@style/Entry.TextInputLayout">
+        <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:id="@+id/brh_code">
-            <android.support.design.widget.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:hint="Code BRH"/>
-        </android.support.design.widget.TextInputLayout>
+            android:inputType="text"
+            android:hint="Code BRH"/>
+    </android.support.design.widget.TextInputLayout>
 
-        <!-- Account Number -->
-        <android.support.design.widget.TextInputLayout
+    <!-- Account Number -->
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/vendor_account"
+        android:theme="@style/Entry.TextInputLayout">
+        <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:id="@+id/vendor_account">
-            <android.support.design.widget.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:hint="@string/account_number"/>
-        </android.support.design.widget.TextInputLayout>
+            android:inputType="text"
+            android:hint="@string/account_number"/>
+    </android.support.design.widget.TextInputLayout>
 
-        <!-- Routing Number -->
-        <android.support.design.widget.TextInputLayout
+    <!-- Routing Number -->
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/routing_number"
+        android:theme="@style/Entry.TextInputLayout">
+        <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:id="@+id/routing_number">
-            <android.support.design.widget.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text|numberDecimal"
-                android:hint="@string/routing_number"/>
-        </android.support.design.widget.TextInputLayout>
+            android:inputType="text|numberDecimal"
+            android:hint="@string/routing_number"/>
+    </android.support.design.widget.TextInputLayout>
 
-        <!-- Phone -->
-        <android.support.design.widget.TextInputLayout
+    <!-- Phone -->
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/phone"
+        android:theme="@style/Entry.TextInputLayout">
+        <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:id="@+id/phone">
-            <android.support.design.widget.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:hint="@string/phone"/>
-        </android.support.design.widget.TextInputLayout>
+            android:inputType="text"
+            android:hint="@string/phone"/>
+    </android.support.design.widget.TextInputLayout>
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/validate"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:padding="12dp"
-            android:text="@string/validate_profile"/>
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/validate"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:padding="12dp"
+        android:text="@string/validate_profile"
+        style="@style/PositiveButton"/>
 
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>

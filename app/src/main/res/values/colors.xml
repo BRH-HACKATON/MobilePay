@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3393cf</color>
-    <color name="colorPrimaryDark">#3260a2</color>
-    <color name="colorAccent">#e46c0a</color>
+    <!-- Colors - MULTI THEME Approach
+
+        1- Each color will be used with same name across all application
+           ex: colorPrimary, colorPrimaryDark, colorVariantPrimary, colorVariantSecondary
+
+        2 - To apply theme, just replace the VALUE of each color name
+            with its corresponding COLOR NAME in a specific THEME
+           ex: for <color name="colorPrimary">#3393cf</color> to
+              <color name="colorPrimary">@color/colorPrimaryBasic</color>
+
+    -->
+
+    <!-- Color Names for Themes (Start) -->
+    <color name="colorPrimary">@color/colorPrimaryBasic</color>
+    <color name="colorPrimaryDark">@color/colorPrimaryDarkBasic</color>
+    <color name="colorAccent">@color/colorAccentBasic</color>
+    <color name="colorVariantPrimary">@color/colorVariantPrimaryBasic</color>
+    <color name="colorVariantSecondary">@color/colorVariantSecondaryBasic</color>
+    <color name="colorWritingLight">@color/colorWritingLightBasic</color>
+    <color name="colorWriting">@color/colorWritingBasic</color>
+    <color name="colorWritingDark">@color/colorWritingDarkBasic</color>
+    <color name="colorBack">@color/colorBackBasic</color>
+    <color name="colorVariantPrimaryBack">@color/colorVariantPrimaryBackBasic</color>
+    <!-- Color Names for Themes (End) -->
+
 
     <color name="white">#ffffff</color>
     <color name="dark_grey">#424242</color>
     <color name="medium_grey">#9E9E9E</color>
     <color name="button_grey">#757575</color>
+
+
+
+    <!-- THEME 1 Color Names
+         BRH LIGHT BACKGROUND  (Start)
+    -->
+    <!--color name="colorPrimaryBasic">#3260a2</color-->
+    <color name="colorPrimaryBasic">#203d68</color>
+    <color name="colorPrimaryDarkBasic">#102634</color>
+    <color name="colorAccentBasic">#3393cf</color>
+    <color name="colorVariantPrimaryBasic">#e46c0a</color>
+    <color name="colorVariantSecondaryBasic">#8ac13e</color>
+    <color name="colorWritingLightBasic">#dee1e3</color>
+    <color name="colorWritingBasic">#a0a1a3</color>
+    <color name="colorWritingDarkBasic">#404143</color>
+    <color name="colorBackBasic">#fdfdfd</color>
+    <color name="colorVariantPrimaryBackBasic">#cae0fd</color>
+    <!-- THEME BRH LIGHT BACKGROUND  (End) -->
+
 </resources>

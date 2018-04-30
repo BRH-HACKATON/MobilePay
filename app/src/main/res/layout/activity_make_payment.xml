@@ -1,188 +1,179 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="com.brh.pronapmobile.activities.MakePaymentActivity">
 
-    <android.support.design.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/coordinator"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff">
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@id/appbar">
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/title"
+                    android:text="Vérifiez les Détails"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:id="@+id/message"
+                    android:text="Vérifiez si les détails du QR Code sont correctes pour le montant que vous allez payer."
+                    android:textSize="16sp"
+                    android:textColor="@color/colorWriting"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
+                android:background="@color/colorWritingLight">
 
                 <ImageView
-                    android:id="@+id/ivQRCode"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="16dp" />
+                        android:id="@+id/ivQRCode"
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:layout_gravity="center_horizontal"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:orientation="horizontal">
+                    android:layout_marginLeft="12dp"
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="200dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="VENDEUR"
-                            android:textColor="#aaa"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                            style="@style/Key.TextView"/>
 
                         <TextView
                             android:id="@+id/tvVendor"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Nom Vendeur"
-                            android:textSize="16sp" />
+                            style="@style/Value.TextView" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="100dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_marginTop="8dp"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="PRIX"
-                            android:textColor="#aaa"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                            style="@style/Key.TextView" />
 
                         <TextView
                             android:id="@+id/tvPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0.00 gdes"
-                            android:textSize="16sp" />
+                            style="@style/Value.TextView"/>
                     </LinearLayout>
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="PRODUIT/SERVICE"
-                            android:textColor="#aaa"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                            style="@style/Key.TextView" />
 
                         <TextView
                             android:id="@+id/tvProduct"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Description Produit" />
+                            android:text="Description Produit"
+                            style="@style/Value.TextView"/>
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <!-- Credit Card Payment Choice -->
-                <LinearLayout
+            </LinearLayout>
+
+            <!-- Credit Card Payment Choice -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="CHOISIR CARTE DEBIT"
+                    style="@style/Key.TextView" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvCards"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="24dp">
+                    android:layout_marginTop="-30dp"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"/>
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="CHOISIR CARTE DEBIT"
-                        android:textColor="#aaa"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="36dp">
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/rvCards"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
-                </LinearLayout>
-
-                <LinearLayout
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/pay"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="36dp"
-                    android:orientation="horizontal">
+                    android:layout_height="@dimen/button_height"
+                    android:text="PAYER"
+                    style="@style/PositiveButton"/>
 
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/cancel_payment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Cancel"
-                        tools:backgroundTint="#AAA"
-                        tools:textColor="#fff" />
-
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/pay"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Pay"
-                        tools:backgroundTint="@color/colorPrimaryDark"
-                        tools:textColor="#fff" />
-                </LinearLayout>
-
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/cancel_payment"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height"
+                    android:text="RESCANNER"
+                    style="@style/NegativeButton"/>
 
             </LinearLayout>
 
-            <android.support.design.widget.AppBarLayout
-                android:id="@+id/appbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        </LinearLayout>
 
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/colorPrimary"
-                    app:layout_scrollFlags="scroll|enterAlways"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+    </ScrollView>
 
-            </android.support.design.widget.AppBarLayout>
+    <include android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/appbar" />
 
-        </android.support.constraint.ConstraintLayout>
-
-    </android.support.design.widget.CoordinatorLayout>
-
-</ScrollView>
+</android.support.design.widget.CoordinatorLayout>

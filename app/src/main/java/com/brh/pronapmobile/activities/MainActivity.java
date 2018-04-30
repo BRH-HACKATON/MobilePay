@@ -209,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void scanQRCode() {
         //intializing scan object
+
         qrScan = new IntentIntegrator(this);
         qrScan.initiateScan();
     }

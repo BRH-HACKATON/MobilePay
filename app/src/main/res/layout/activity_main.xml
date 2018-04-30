@@ -8,105 +8,87 @@
     android:layout_height="match_parent"
     tools:openDrawer="start">
 
-
-
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/faMenu"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:foregroundGravity="right|bottom"
-        fab:menu_animationDelayPerItem="50"
-        fab:menu_backgroundColor="@android:color/transparent"
-        fab:menu_buttonSpacing="0dp"
-        fab:menu_colorNormal="@color/colorAccent"
-        fab:menu_colorPressed="#E75043"
-        fab:menu_colorRipple="#99FFFFFF"
-        fab:menu_fab_label="Paiement BRH"
-        fab:menu_fab_size="normal"
-        fab:menu_icon="@drawable/paper_money_white"
-        fab:menu_labels_colorNormal="#333333"
-        fab:menu_labels_colorPressed="#444444"
-        fab:menu_labels_colorRipple="#66FFFFFF"
-        fab:menu_labels_cornerRadius="3dp"
-        fab:menu_labels_ellipsize="none"
-        fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
-        fab:menu_labels_margin="0dp"
-        fab:menu_labels_maxLines="-1"
-        fab:menu_labels_padding="8dp"
-        fab:menu_labels_paddingBottom="4dp"
-        fab:menu_labels_paddingLeft="8dp"
-        fab:menu_labels_paddingRight="8dp"
-        fab:menu_labels_paddingTop="4dp"
-        fab:menu_labels_position="left"
-        fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
-        fab:menu_labels_showShadow="true"
-        fab:menu_labels_singleLine="false"
-        fab:menu_labels_textColor="#FFFFFF"
-        fab:menu_labels_textSize="14sp"
-        fab:menu_openDirection="up"
-        fab:menu_shadowColor="#66000000"
-        fab:menu_shadowRadius="4dp"
-        fab:menu_shadowXOffset="1dp"
-        fab:menu_shadowYOffset="3dp"
-        fab:menu_showShadow="true">
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fabBuyer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/qr_code_reader"
-            app:fab_colorNormal="@color/colorPrimaryDark"
-            fab:fab_label="Scanner &amp; Acheter"
-            fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fabVendor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_attach_money_white"
-            app:fab_colorNormal="@color/colorPrimaryDark"
-            fab:fab_label="Vendre"
-            fab:fab_size="mini" />
-
-    </com.github.clans.fab.FloatingActionMenu>
-
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.constraint.ConstraintLayout
+        <ListView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/lvPayments"
+            android:layout_marginTop="?attr/actionBarSize"/>
 
-            <ListView
-                android:layout_width="match_parent"
+        <include android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/appbar" />
+
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/faMenu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:foregroundGravity="right|bottom"
+            fab:menu_animationDelayPerItem="50"
+            fab:menu_backgroundColor="@android:color/transparent"
+            fab:menu_buttonSpacing="0dp"
+            fab:menu_colorNormal="@color/colorAccent"
+            fab:menu_colorPressed="@color/colorPrimary"
+            fab:menu_colorRipple="#99FFFFFF"
+            fab:menu_fab_label="Paiement BRH"
+            fab:menu_fab_size="normal"
+            fab:menu_icon="@drawable/paper_money_white"
+            fab:menu_labels_colorNormal="#333333"
+            fab:menu_labels_colorPressed="#444444"
+            fab:menu_labels_colorRipple="#66FFFFFF"
+            fab:menu_labels_cornerRadius="3dp"
+            fab:menu_labels_ellipsize="none"
+            fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
+            fab:menu_labels_margin="0dp"
+            fab:menu_labels_maxLines="-1"
+            fab:menu_labels_padding="8dp"
+            fab:menu_labels_paddingBottom="4dp"
+            fab:menu_labels_paddingLeft="8dp"
+            fab:menu_labels_paddingRight="8dp"
+            fab:menu_labels_paddingTop="4dp"
+            fab:menu_labels_position="left"
+            fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
+            fab:menu_labels_showShadow="true"
+            fab:menu_labels_singleLine="false"
+            fab:menu_labels_textColor="#FFFFFF"
+            fab:menu_labels_textSize="14sp"
+            fab:menu_openDirection="up"
+            fab:menu_shadowColor="#66000000"
+            fab:menu_shadowRadius="4dp"
+            fab:menu_shadowXOffset="1dp"
+            fab:menu_shadowYOffset="3dp"
+            fab:menu_showShadow="true">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabBuyer"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/lvPayments"
-                app:layout_constraintTop_toBottomOf="@+id/appbar"/>
+                android:src="@drawable/qr_code_reader"
+                app:fab_colorNormal="@color/colorVariantSecondary"
+                app:fab_colorPressed="@color/colorVariantPrimary"
+                fab:fab_label="Scanner &amp; Acheter"
+                fab:fab_size="mini" />
 
-            <android.support.design.widget.AppBarLayout
-                android:id="@+id/appbar"
-                android:layout_width="match_parent"
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabVendor"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+                android:src="@drawable/ic_attach_money_white"
+                app:fab_colorNormal="@color/colorVariantSecondary"
+                app:fab_colorPressed="@color/colorVariantPrimary"
+                fab:fab_label="Vendre"
+                fab:fab_size="mini" />
 
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/colorPrimary"
-                    app:layout_scrollFlags="scroll|enterAlways"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-            </android.support.design.widget.AppBarLayout>
-
-        </android.support.constraint.ConstraintLayout>
+        </com.github.clans.fab.FloatingActionMenu>
 
     </android.support.design.widget.CoordinatorLayout>
 
@@ -117,7 +99,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/navheader"
-        app:menu="@menu/menu_navigation" >
+        app:menu="@menu/menu_navigation">
 
     </android.support.design.widget.NavigationView>
 
