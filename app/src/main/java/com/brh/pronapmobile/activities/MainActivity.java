@@ -41,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fabVendor;
     private FloatingActionMenu faMenu;
 
-    private IntentIntegrator qrScan;
-
     private ArrayList<Payment> payments;
     private PaymentArrayAdapter aPayments;
     private ListView lvPayments;
@@ -168,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Check if User does not have debit card to propose to create new one
                 if(User.hasCard()) {
-                    scanQRCode();
+                    makePayment();
                 } else {
                     addDebitCard();
                 }
@@ -207,44 +205,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void scanQRCode() {
-        //intializing scan object
-
-        qrScan = new IntentIntegrator(this);
-        qrScan.initiateScan();
-    }
-
-    //Getting the scan results
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-            //if qrcode has nothing in it
-            if (result.getContents() == null) {
-                Toast.makeText(this, "Result Not Found", Toast.LENGTH_LONG).show();
-            } else {
-                //if qr contains data
-                try {
-                    //converting the data to json
-                    JSONObject obj = new JSONObject(result.getContents());
-                    //Log.d(TAG, result.getContents());
-
-                    Intent i = new Intent(this, MakePaymentActivity.class);
-                    i.putExtra("qrCodeString", result.getContents());
-                    startActivity(i);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    //if control comes here
-                    //that means the encoded format not matches
-                    //in this case you can display whatever data is available on the qrcode
-                    //to a toast
-                    Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
-                }
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
+    public void makePayment() {
+        Intent i = new Intent(this, MakePaymentActivity.class);
+        startActivity(i);
     }
 
 

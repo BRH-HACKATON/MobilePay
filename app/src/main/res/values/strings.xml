@@ -48,6 +48,14 @@
     <string name="vendor">Vendeur</string>
     <string name="buyer">Acheteur</string>
 
+    <!-- Pages and Popup Titles and Description -->
+    <string name="qr_code_scan_title">Scanner le QR Code</string>
+    <string name="qr_code_scan_description">
+        Utiliser la Caméra pour scanner le QR Code du Paiement que vous voulez effectuer. Toutes les
+        informations du Paiement en question seront automatiquement détectées, puis affichées pour
+        être validées.
+    </string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

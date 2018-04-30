@@ -1,5 +1,6 @@
 package com.brh.pronapmobile.activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +31,10 @@ import com.brh.pronapmobile.utils.BitmapEncoder;
 import com.brh.pronapmobile.utils.MiddleItemFinder;
 import com.brh.pronapmobile.utils.SMSUtils;
 import com.google.zxing.WriterException;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -40,8 +46,15 @@ public class MakePaymentActivity extends AppCompatActivity {
 
     public static final String TAG = "MakePaymentActivity";
 
-    private JSONObject paymentData = null;
+    // QR Code Scan Preparation
+    private IntentIntegrator qrScan;
+    private AppCompatButton btnScan;
+    private ScrollView svScanCodePreparation;
 
+
+    // QR Code Scan Results
+    private JSONObject paymentData = null;
+    private ScrollView svScanCodeResult;
     private ImageView ivQRCode;
     private TextView tvVendor;
     private TextView tvPrice;
@@ -73,6 +86,67 @@ public class MakePaymentActivity extends AppCompatActivity {
             supportActionBar.setTitle("Effectuer un Paiement");
         }
 
+        btnScan = findViewById(R.id.scan);
+        svScanCodePreparation = findViewById(R.id.svScanCodePreparation);
+        svScanCodeResult = findViewById(R.id.svScanCodeResult);
+
+        // Hide QR Code Result Layout
+        svScanCodeResult.setVisibility(View.GONE);
+
+        // Scan QR Code on click of Scan Button
+        btnScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanQRCode();
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    public void scanQRCode() {
+        //intializing scan object
+        qrScan = new IntentIntegrator(this);
+        qrScan.initiateScan();
+    }
+
+    //Getting the scan results
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            //if qrcode has nothing in it
+            if (result.getContents() == null) {
+                Toast.makeText(this, "Result Not Found", Toast.LENGTH_LONG).show();
+            } else {
+                //Log.d(TAG, result.getContents());
+                setupQRCodeResult(result.getContents());
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    public void setupQRCodeResult(String qrCodeString) {
+        // Hide QR Code Preparation Layout and Show QR Code Result Layout
+        svScanCodePreparation.setVisibility(View.GONE);
+        svScanCodeResult.setVisibility(View.VISIBLE);
 
         ivQRCode = findViewById(R.id.ivQRCode);
         tvVendor = findViewById(R.id.tvVendor);
@@ -106,7 +180,6 @@ public class MakePaymentActivity extends AppCompatActivity {
         aCards.selectItem(0);
 
         // Change String JSONObject
-        String qrCodeString = getIntent().getStringExtra("qrCodeString");
         try {
             paymentData = new JSONObject(qrCodeString);
             // fill the TextViews with the JSONObject
@@ -116,25 +189,6 @@ public class MakePaymentActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-        if (id == android.R.id.home) {
-            onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
-
 
     public void listCards() {
         rvCards.setVisibility(View.VISIBLE);
