@@ -112,7 +112,7 @@ public class VendorActivity extends AppCompatActivity {
     }
 
     public void listVendors() {
-
+        rvVendors.setVisibility(View.VISIBLE);
         // retrieve all vendors from DB
         vendors = Vendor.all();
 
