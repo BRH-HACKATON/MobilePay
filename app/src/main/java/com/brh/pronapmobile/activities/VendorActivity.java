@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +27,7 @@ public class VendorActivity extends AppCompatActivity {
 
     private ArrayList<Vendor> vendors;
     private VendorArrayAdapter aVendors;
-    private ListView lvVendors;
+    private RecyclerView rvVendors;
     
     FloatingActionButton fab;
 
@@ -48,11 +50,18 @@ public class VendorActivity extends AppCompatActivity {
         // initialize Vendor ArrayList
         vendors = new ArrayList<>();
         // initialize Vendor Array Adapter
-        aVendors = new VendorArrayAdapter(this, vendors);
-        // find list view
-        lvVendors = findViewById(R.id.lvVendors);
+        aVendors = new VendorArrayAdapter(vendors);
+        // find recycler view
+        rvVendors = findViewById(R.id.rvVendors);
         // connect adapter to list view
-        lvVendors.setAdapter(aVendors);
+        rvVendors.setAdapter(aVendors);
+
+        // Set layout manager to position the items
+        rvVendors.setLayoutManager(new LinearLayoutManager(this));
+
+        // set RecyclerView animation on items
+        // jp.wasabeef.recyclerview.animators.{Animators Class}
+        rvVendors.setItemAnimator(new jp.wasabeef.recyclerview.animators.FadeInLeftAnimator());
 
         // Adding Floating Action Button to bottom right of main view
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -91,27 +100,27 @@ public class VendorActivity extends AppCompatActivity {
     }
 
     public void launchCreateFragment() {
-        // hide listView and Floating Action Button
+        // hide RecyclerView and Floating Action Button
         fab.setVisibility(View.GONE);
-        lvVendors.setVisibility(View.GONE);
+        rvVendors.setVisibility(View.GONE);
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = new CreateVendorFragment();
         fm.beginTransaction().replace(R.id.flVendor, fragment).commit();
+
+        // TODO : Add Vendor Saved Listener in fragment to refresh the list in the recyclerview
     }
 
     public void listVendors() {
-        lvVendors.setVisibility(View.VISIBLE);
-        aVendors.clear();
 
         // retrieve all vendors from DB
         vendors = Vendor.all();
 
-        aVendors.addAll(vendors);
+        aVendors.setVendors(vendors);
         aVendors.notifyDataSetChanged();
     }
 
     public void clearVendors() {
-        aVendors.clear();
+        rvVendors.removeAllViews();
     }
 }

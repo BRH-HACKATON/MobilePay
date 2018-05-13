@@ -18,13 +18,11 @@
 
     </ScrollView>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvVendors"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:id="@+id/lvVendors"
-        android:divider="#DDD"
-        android:dividerHeight="6dp"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <include android:layout_width="match_parent"
         android:layout_height="wrap_content"
