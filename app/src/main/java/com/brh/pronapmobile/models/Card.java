@@ -97,6 +97,7 @@ public class Card extends BaseModel implements Serializable {
         maskedText += getNumber().substring(Math.max(getNumber().length() - 3, 0), getNumber().length());
         return maskedText;
     }
+
     public static ArrayList<Card> all() {
         long count = SQLite.select(Method.count()).from(Card.class).count();
         Log.d("CardModel", String.valueOf(count));

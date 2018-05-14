@@ -270,7 +270,7 @@ public class MakePaymentActivity extends AppCompatActivity {
     public void sendSMS() {
         payButton.setEnabled(false);
         try {
-            // TODO : replace the values later with attributes from Vendor Model
+            // TODO : replace the values later with attributes from Card Model
             Card card = (Card) aCards.getItem(0);
 
             if(card != null) {

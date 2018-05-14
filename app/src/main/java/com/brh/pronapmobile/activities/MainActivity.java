@@ -7,6 +7,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Payment> payments;
     private PaymentArrayAdapter aPayments;
-    private ListView lvPayments;
+    private RecyclerView rvPayments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +74,17 @@ public class MainActivity extends AppCompatActivity {
         // initialize Card ArrayList
         payments = new ArrayList<>();
         // initialize Card Array Adapter
-        aPayments = new PaymentArrayAdapter(this, payments);
+        aPayments = new PaymentArrayAdapter(payments);
         // find list view
-        lvPayments = findViewById(R.id.lvPayments);
+        rvPayments = findViewById(R.id.rvPayments);
         // connect adapter to list view
-        lvPayments.setAdapter(aPayments);
+        rvPayments.setAdapter(aPayments);
+        // Set layout manager to position the items
+        rvPayments.setLayoutManager(new LinearLayoutManager(this));
 
+        // set RecyclerView animation on items
+        // jp.wasabeef.recyclerview.animators.{Animators Class}
+        rvPayments.setItemAnimator(new jp.wasabeef.recyclerview.animators.FadeInLeftAnimator());
 
         // Set behavior of Navigation drawer
         navigationView.setNavigationItemSelectedListener(
@@ -220,13 +227,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void listPayments() {
-        lvPayments.setVisibility(View.VISIBLE);
-        aPayments.clear();
+        rvPayments.setVisibility(View.VISIBLE);
 
         // retrieve all cards from DB
         payments = Payment.all();
 
-        aPayments.addAll(payments);
+        aPayments.setPayments(payments);
         aPayments.notifyDataSetChanged();
     }
 
