@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.brh.pronapmobile.models.Card;
 import com.brh.pronapmobile.models.Payment;
 import com.brh.pronapmobile.utils.BitmapEncoder;
 import com.brh.pronapmobile.utils.MiddleItemFinder;
+import com.brh.pronapmobile.utils.Procryptor;
 import com.brh.pronapmobile.utils.SMSUtils;
 import com.google.zxing.WriterException;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -39,6 +41,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import javax.crypto.SecretKey;
 
 import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
 
@@ -143,7 +147,7 @@ public class MakePaymentActivity extends AppCompatActivity {
         }
     }
 
-    public void setupQRCodeResult(String qrCodeString) {
+    public void setupQRCodeResult(String qrCodeEncryptedString) {
         // Hide QR Code Preparation Layout and Show QR Code Result Layout
         svScanCodePreparation.setVisibility(View.GONE);
         svScanCodeResult.setVisibility(View.VISIBLE);
@@ -181,9 +185,25 @@ public class MakePaymentActivity extends AppCompatActivity {
 
         // Change String JSONObject
         try {
+            // DECRYPT QR Code to JSON String
+            /*SecretKey secretKey = Procryptor.generateKey("K83SJKF5JS9PN83SKD340SNC");
+            byte[] qrCodeEncryptedBytes = Base64.decode(qrCodeEncryptedString, Base64.NO_WRAP);
+            String qrCodeString = Procryptor.decryptMessage(qrCodeEncryptedBytes, secretKey);
+            Log.d(TAG, "JSON Payment decrypted : " + qrCodeString);*/
+
+            SecretKey secretKey = Procryptor.generateKeyWithHash("K83SJKF5JS9PN83SKD340SNC");
+
+            byte[] qrCodeEncryptedBytes = Base64.decode(qrCodeEncryptedString, Base64.NO_WRAP);
+            Log.d(TAG, "JSON Payment encrypted : " + qrCodeEncryptedString);
+
+            byte[] jsonEncryptedBytes = Base64.decode(qrCodeEncryptedBytes, Base64.NO_WRAP);
+
+            String qrCodeString = Procryptor.decrypt(jsonEncryptedBytes, secretKey);
+            Log.d(TAG, "JSON Payment bytes decrypted : " + qrCodeString);
+
             paymentData = new JSONObject(qrCodeString);
             // fill the TextViews with the JSONObject
-            loadPaymentViews(qrCodeString);
+            loadPaymentViews(qrCodeEncryptedString);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -221,7 +241,7 @@ public class MakePaymentActivity extends AppCompatActivity {
                         callback, RecyclerView.SCROLL_STATE_IDLE));
     }
 
-    public void loadPaymentViews(String qrCodeString) {
+    public void loadPaymentViews(String qrCodeEncryptedString) {
         //Log.d(TAG, "QR CODE JSONObject : " + paymentData.toString());
         try {
             tvVendor.setText(paymentData.getString("vendor_name"));
@@ -237,7 +257,7 @@ public class MakePaymentActivity extends AppCompatActivity {
 
         // Create QR Code image again for vendor
         try {
-            Bitmap bitmap = BitmapEncoder.encodeAsBitmap(qrCodeString, 1000);
+            Bitmap bitmap = BitmapEncoder.encodeAsBitmap(qrCodeEncryptedString, 1000);
             ivQRCode.setImageBitmap(bitmap);
         } catch (WriterException e) {
             e.printStackTrace();

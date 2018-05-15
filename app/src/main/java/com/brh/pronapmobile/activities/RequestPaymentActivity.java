@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,11 +26,23 @@ import com.brh.pronapmobile.adapters.VendorArrayAdapter;
 import com.brh.pronapmobile.models.Vendor;
 import com.brh.pronapmobile.utils.BitmapEncoder;
 import com.brh.pronapmobile.utils.MiddleItemFinder;
+import com.brh.pronapmobile.utils.Procryptor;
 import com.google.gson.Gson;
 import com.google.zxing.WriterException;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 
 import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
 
@@ -183,6 +196,7 @@ public class RequestPaymentActivity extends AppCompatActivity {
         // Convert HashMap to JSON with Gson
         Gson gson = new Gson();
         String json = gson.toJson(paymentData);
+        Log.d(TAG, "JSON Payment : " + json);
 
         // Convert JSON string back to Map.
         /*Type type = new TypeToken<Map<String, String>>(){}.getType();
@@ -191,8 +205,26 @@ public class RequestPaymentActivity extends AppCompatActivity {
             System.out.println("map.get = " + map.get(key));
         }*/
 
-        try {
-            Bitmap bitmap = BitmapEncoder.encodeAsBitmap(json, SIZE);
+        // ENCRYPT PaymentData JSON String for QR Code
+        /*try {
+
+
+            SecretKey secretKey = Procryptor.generateKey("K83SJKF5JS9PN83SKD340SNC");
+            byte[] jsonBytes = Procryptor.encryptMessage(json, secretKey);
+            Log.d(TAG, "JSON Payment bytes encrypted : " + jsonBytes);
+
+            String jsonEncryptedString = Base64.encodeToString(jsonBytes, Base64.NO_WRAP);
+            Log.d(TAG, "JSON Payment encrypted : " + jsonEncryptedString);
+
+            byte[] jsonEncryptedBytes = Base64.decode(jsonEncryptedString, Base64.NO_WRAP);
+
+
+            String jsonDecrypted = Procryptor.decryptMessage(jsonEncryptedBytes, secretKey);
+            Log.d(TAG, "JSON Payment bytes decrypted : " + jsonDecrypted);
+
+
+            // Generate QR Code
+            Bitmap bitmap = BitmapEncoder.encodeAsBitmap(jsonEncryptedString, SIZE);
             qrCodeImageView.setImageBitmap(bitmap);
 
             // hide layout Payment Info
@@ -202,7 +234,63 @@ public class RequestPaymentActivity extends AppCompatActivity {
             // unhide layout QRCode
             LinearLayout llCode = findViewById(R.id.llPaymentQRCode);
             llCode.setVisibility(View.VISIBLE);
+
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (InvalidParameterSpecException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
         } catch (WriterException e) {
+            e.printStackTrace();
+        }
+
+        */
+
+        try {
+            SecretKey secretKey = Procryptor.generateKeyWithHash("K83SJKF5JS9PN83SKD340SNC");
+            byte[] jsonBytes = Procryptor.encrypt(json, secretKey);
+            Log.d(TAG, "JSON Payment bytes encrypted : " + jsonBytes);
+
+            String jsonEncryptedString = Base64.encodeToString(jsonBytes, Base64.NO_WRAP);
+            Log.d(TAG, "JSON Payment encrypted : " + jsonEncryptedString);
+
+            byte[] jsonEncryptedBytes = Base64.decode(jsonEncryptedString, Base64.NO_WRAP);
+
+
+            String jsonDecrypted = Procryptor.decrypt(jsonEncryptedBytes, secretKey);
+            Log.d(TAG, "JSON Payment bytes decrypted : " + jsonDecrypted);
+
+
+            // Generate QR Code
+            Bitmap bitmap = BitmapEncoder.encodeAsBitmap(jsonEncryptedString, SIZE);
+            qrCodeImageView.setImageBitmap(bitmap);
+
+            // hide layout Payment Info
+            LinearLayout llPayment = findViewById(R.id.llPaymentInfo);
+            llPayment.setVisibility(View.GONE);
+
+            // unhide layout QRCode
+            LinearLayout llCode = findViewById(R.id.llPaymentQRCode);
+            llCode.setVisibility(View.VISIBLE);
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (WriterException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
