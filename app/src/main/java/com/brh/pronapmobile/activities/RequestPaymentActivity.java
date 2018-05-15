@@ -5,6 +5,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,11 +24,14 @@ import com.brh.pronapmobile.R;
 import com.brh.pronapmobile.adapters.VendorArrayAdapter;
 import com.brh.pronapmobile.models.Vendor;
 import com.brh.pronapmobile.utils.BitmapEncoder;
+import com.brh.pronapmobile.utils.MiddleItemFinder;
 import com.google.gson.Gson;
 import com.google.zxing.WriterException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
 
 public class RequestPaymentActivity extends AppCompatActivity {
 
@@ -33,7 +41,8 @@ public class RequestPaymentActivity extends AppCompatActivity {
 
     private ImageView qrCodeImageView;
     private AppCompatButton generateButton;
-    private Spinner spinnerVendors;
+    private RecyclerView rvVendors;
+    private LinearLayoutManager layoutManager;
 
     private ArrayList<Vendor> vendors;
     private VendorArrayAdapter aVendors;
@@ -60,16 +69,32 @@ public class RequestPaymentActivity extends AppCompatActivity {
 
         qrCodeImageView = findViewById(R.id.qrCode);
         generateButton = findViewById(R.id.generate);
-        spinnerVendors = findViewById(R.id.spinnerVendors);
+        rvVendors = findViewById(R.id.rvVendors);
+
+        final RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(this) {
+            @Override protected int getHorizontalSnapPreference() {
+                return LinearSmoothScroller.SNAP_TO_START;
+            }
+        };
+
 
         // initialize Vendor ArrayList
         vendors = new ArrayList<>();
         // initialize Vendor Array Adapter
-        aVendors = new VendorArrayAdapter(this, vendors);
+        aVendors = new VendorArrayAdapter(vendors, true, null);
         // connect adapter to list view
-        spinnerVendors.setAdapter(aVendors);
+        rvVendors.setAdapter(aVendors);
+
+
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        rvVendors.setLayoutManager(layoutManager);
+
+        setupRecyclerViewVendorsListeners();
 
         listVendors();
+
+        // Select default position (0 for now) TODO : Setup default position in Settings
+        aVendors.selectItem(0);
 
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,13 +123,32 @@ public class RequestPaymentActivity extends AppCompatActivity {
         finish();
     }
 
-    public void listVendors() {
-        aVendors.clear();
+    public void setupRecyclerViewVendorsListeners() {
+        rvVendors.setItemAnimator(new FadeInUpAnimator());
 
-        // retrieve all vendors from DB
+        final SnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(rvVendors);
+
+        MiddleItemFinder.MiddleItemCallback callback =
+                new MiddleItemFinder.MiddleItemCallback() {
+                    @Override
+                    public void scrollFinished(int middleElement) {
+                        // interaction with middle item
+                        Log.d(TAG, "Middle Item : " + middleElement);
+                        aVendors.selectItem(middleElement);
+                    }
+                };
+
+        rvVendors.addOnScrollListener(
+                new MiddleItemFinder(this, layoutManager,
+                        callback, RecyclerView.SCROLL_STATE_IDLE));
+    }
+
+    public void listVendors() {
+         // retrieve all vendors from DB
         vendors = Vendor.all();
 
-        aVendors.addAll(vendors);
+        aVendors.setVendors(vendors);
         aVendors.notifyDataSetChanged();
     }
 
@@ -117,8 +161,9 @@ public class RequestPaymentActivity extends AppCompatActivity {
         paymentData.put("product", etProduct.getText().toString());
         paymentData.put("price", etPrice.getText().toString());
 
-        // Add vendor informations to HashMap
-        Vendor vendor = (Vendor) spinnerVendors.getSelectedItem();
+        // Add vendor information to HashMap
+
+        Vendor vendor = (Vendor) aVendors.getItem(0);
         if(vendor != null) {
             Log.d(TAG, "Vendor Selected: " + vendor.getName());
             paymentData.put("vendor_name", vendor.getName());
