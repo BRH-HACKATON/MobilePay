@@ -23,11 +23,17 @@ import com.brh.pronapmobile.R;
 
 public class AlertMessage {
 
-    public AlertMessage.OnPositiveClickListener listener;
-    public AlertMessage.OnDismissListener dismissListener;
+    private OnPositiveClickListener positiveListener;
+    private OnNegativeClickListener negativeListener;
+    // after closing
+    private OnDismissListener dismissListener;
 
     public interface OnPositiveClickListener {
         void onPositiveClick();
+    }
+
+    public interface OnNegativeClickListener {
+        void onNegativeClick();
     }
 
     public interface OnDismissListener {
@@ -40,6 +46,8 @@ public class AlertMessage {
     private RelativeLayout rlBackground;
     private View popupView;
     private ImageView ivBanner;
+    // if banner view color filter was passed via set method
+    private boolean bannerColorFilterAdded = false;
     private TextView tvTitle;
     private TextView tvMessage;
     private Button btnPositive;
@@ -47,12 +55,16 @@ public class AlertMessage {
 
     private int banner = R.drawable.ic_check_black_48dp;
     private String title = "Opération Réussie";
-    private String message = "Votre opération a été réussie  avec succès";
+    private String message = "Votre opération a été réussie  avec succès.";
     private String positiveText = "OK";
-    private String negativeText = "Quitter";
+    private String negativeText = "QUITTER";
     private boolean hasPositiveButton = false;
     private boolean isModal = true;
 
+    public AlertMessage(Context context) {
+        this.mContext = context;
+        onCreate();
+    }
 
     public void setBanner(int banner) {
         this.banner = banner;
@@ -78,23 +90,19 @@ public class AlertMessage {
         this.hasPositiveButton = hasPositiveButton;
     }
 
-    public AlertMessage(Context context) {
-        this.mContext = context;
+    public void setBannerViewColorFilter(int color) {
+        this.ivBanner.setColorFilter(color);
+        this.bannerColorFilterAdded = true;
     }
 
     public void setModal(boolean modal) {
         isModal = modal;
     }
 
-    public void show(View parentView) {
+
+    public void onCreate() {
         // 1 - Inflate Alert Message View
-        // 2 - Set values to Views
-        // 3 - Set Click Listener to Positive and Negative Button
-        // 4 - Apply Logic behaviour with value from Setters (hasPositiveButton, isModal)
-        // 5 - Show PopupWindow with the Alert Message View with animation style
-        // 6 - Make a Post Delay to set PopupView background to Semi-Transparent after the animation
-        //     duration time has elapsed
-        // 7 - On Dismiss the PopupWindow, set PopupView background to transparent
+        // 2 - Set Click Listener to Positive and Negative Button
 
         // Inflate the layout for this fragment
         LayoutInflater inflater = (LayoutInflater) mContext.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -107,12 +115,42 @@ public class AlertMessage {
         btnPositive = popupView.findViewById(R.id.btnPositive);
         btnNegative = popupView.findViewById(R.id.btnNegative);
 
+        btnPositive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Close Alert anyway
+                closePopupWindow();
+                if(positiveListener != null)
+                    positiveListener.onPositiveClick();
+            }
+        });
+
+        btnNegative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closePopupWindow();
+                if(negativeListener != null)
+                    negativeListener.onNegativeClick();
+            }
+        });
+    }
+
+    public void show(View parentView) {
+        // 1 - Set values to Views
+        // 2 - Apply Logic behaviour with value from Setters (hasPositiveButton, isModal)
+        // 3 - Show PopupWindow with the Alert Message View with animation style
+        // 4 - Make a Post Delay to set PopupView background to Semi-Transparent after the animation
+        //     duration time has elapsed
+        // 5 - On Dismiss the PopupWindow, set PopupView background to transparent
+
         // Set values to Views
         if(banner == R.drawable.ic_check_black_48dp) {
             ivBanner.setColorFilter(R.color.colorVariantSecondary);
         } else {
-            ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
-            ivBanner.setColorFilter(null);
+            if(!bannerColorFilterAdded) {
+                ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
+                ivBanner.setColorFilter(null);
+            }
         }
 
         ivBanner.setImageResource(banner);
@@ -124,28 +162,11 @@ public class AlertMessage {
 
         rlBackground.setBackgroundColor(Color.TRANSPARENT);
 
-        btnNegative.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                closePopupWindow();
-            }
-        });
-
-        btnPositive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Close Alert anyway
-                closePopupWindow();
-                listener.onPositiveClick();
-            }
-        });
-
+        // Setup Alert Logics
+        setupLogics();
 
         popupWindow = new PopupWindow(popupView,
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-        // Setup Alert Logics
-        setupLogics();
 
         // If the PopupWindow should be focusable
         popupWindow.setFocusable(true);
@@ -196,18 +217,25 @@ public class AlertMessage {
     public void closePopupWindow() {
         rlBackground.setBackgroundColor(Color.TRANSPARENT);
 
+        // Post delay the dismiss to prevent undesired behavior
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 popupWindow.dismiss();
-                dismissListener.onDismiss();
+
+                if(dismissListener != null)
+                    dismissListener.onDismiss();
             }
         }, 50);
     }
 
     public void setOnPositiveClickListener(AlertMessage.OnPositiveClickListener listener) {
-        this.listener = listener;
+        this.positiveListener = listener;
+    }
+
+    public void setOnNegativeClickListener(AlertMessage.OnNegativeClickListener listener) {
+        this.negativeListener = listener;
     }
 
     public void setOnDismissListener(AlertMessage.OnDismissListener listener) {

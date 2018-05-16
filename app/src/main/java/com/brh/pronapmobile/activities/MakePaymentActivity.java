@@ -2,6 +2,7 @@ package com.brh.pronapmobile.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -64,7 +65,7 @@ public class MakePaymentActivity extends AppCompatActivity {
     private TextView tvPrice;
     private TextView tvProduct;
     private AppCompatButton payButton;
-    private AppCompatButton cancelButton;
+    private AppCompatButton rescanButton;
 
     private RecyclerView rvCards;
     private LinearLayoutManager layoutManager;
@@ -94,6 +95,15 @@ public class MakePaymentActivity extends AppCompatActivity {
         svScanCodePreparation = findViewById(R.id.svScanCodePreparation);
         svScanCodeResult = findViewById(R.id.svScanCodeResult);
 
+        // Prepare the Payment Views
+        ivQRCode = findViewById(R.id.ivQRCode);
+        tvVendor = findViewById(R.id.tvVendor);
+        tvPrice = findViewById(R.id.tvPrice);
+        tvProduct = findViewById(R.id.tvProduct);
+        payButton = findViewById(R.id.pay);
+        rescanButton = findViewById(R.id.rescan);
+        rvCards = findViewById(R.id.rvCards);
+
         // Hide QR Code Result Layout
         svScanCodeResult.setVisibility(View.GONE);
 
@@ -104,61 +114,6 @@ public class MakePaymentActivity extends AppCompatActivity {
                 scanQRCode();
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-        if (id == android.R.id.home) {
-            onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
-
-    public void scanQRCode() {
-        //intializing scan object
-        qrScan = new IntentIntegrator(this);
-        qrScan.initiateScan();
-    }
-
-    //Getting the scan results
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-            //if qrcode has nothing in it
-            if (result.getContents() == null) {
-                Toast.makeText(this, "Result Not Found", Toast.LENGTH_LONG).show();
-            } else {
-                //Log.d(TAG, result.getContents());
-                setupQRCodeResult(result.getContents());
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    public void setupQRCodeResult(String qrCodeEncryptedString) {
-        // Hide QR Code Preparation Layout and Show QR Code Result Layout
-        svScanCodePreparation.setVisibility(View.GONE);
-        svScanCodeResult.setVisibility(View.VISIBLE);
-
-        ivQRCode = findViewById(R.id.ivQRCode);
-        tvVendor = findViewById(R.id.tvVendor);
-        tvPrice = findViewById(R.id.tvPrice);
-        tvProduct = findViewById(R.id.tvProduct);
-        payButton = findViewById(R.id.pay);
-        cancelButton = findViewById(R.id.cancel_payment);
-        rvCards = findViewById(R.id.rvCards);
 
         final RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(this) {
             @Override protected int getHorizontalSnapPreference() {
@@ -182,11 +137,59 @@ public class MakePaymentActivity extends AppCompatActivity {
 
         // Select default position (0 for now) TODO : Setup default position in Settings
         aCards.selectItem(0);
+    }
 
-        // Change String JSONObject
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    public void scanQRCode() {
+        //intializing scan object
+        if(qrScan == null)
+            qrScan = new IntentIntegrator(this);
+
+        qrScan.initiateScan();
+    }
+
+    //Getting the scan results
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            //if qrcode has nothing in it
+            if (result.getContents() == null) {
+                Toast.makeText(this, "Result Not Found", Toast.LENGTH_LONG).show();
+            } else {
+                //Log.d(TAG, result.getContents());
+                setupQRCodeResult(result.getContents());
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    public void setupQRCodeResult(String qrCodeEncryptedString) {
+
+        // STEP 1 - Verify that the QR Code String is from PRONAPP application
+
         try {
             // DECRYPT QR Code to JSON String
             SecretKey secretKey = Procryptor.generateKey("K83SJKF5JS9PN83SKD340SNC");
+            Log.d(TAG, "RAW String found in QR Code : " + qrCodeEncryptedString);
 
             byte[] qrCodeEncryptedBytes = Base64.decode(qrCodeEncryptedString, Base64.NO_WRAP);
             //Log.d(TAG, "JSON Payment encrypted : " + qrCodeEncryptedString);
@@ -195,11 +198,31 @@ public class MakePaymentActivity extends AppCompatActivity {
             //Log.d(TAG, "JSON Payment bytes decrypted : " + qrCodeString);
 
             paymentData = new JSONObject(qrCodeString);
-            // fill the TextViews with the JSONObject
-            loadPaymentViews(qrCodeEncryptedString);
+            Log.d(TAG, paymentData.toString());
+
+            // STEP 2 --------------
+            // If everything goes well
+            // check if JSONObject is ok and contains key "pronap_code" with value "PD$BVQRC"
+            if(paymentData.has("pronapp_code") && paymentData.getString("pronapp_code").equals("PD$BVQRC")) {
+
+                // Hide QR Code Preparation Layout and Show QR Code Result Layout
+                svScanCodePreparation.setVisibility(View.GONE);
+                svScanCodeResult.setVisibility(View.VISIBLE);
+
+
+                // fill the TextViews with the JSONObject
+                loadPaymentViews(qrCodeEncryptedString);
+            } else {
+                // Then the QR Code is not compatible with Pronapp, Alert Message
+                alertIncompatibleQRCode();
+            }
+
+
 
         } catch (Exception e) {
             e.printStackTrace();
+            // if the decryption is not correct, then probably it is an incompatible QR Code
+            alertIncompatibleQRCode();
         }
     }
 
@@ -232,6 +255,37 @@ public class MakePaymentActivity extends AppCompatActivity {
         rvCards.addOnScrollListener(
                 new MiddleItemFinder(this, layoutManager,
                         callback, RecyclerView.SCROLL_STATE_IDLE));
+    }
+
+    public void alertIncompatibleQRCode() {
+        AlertMessage alert = new AlertMessage(this);
+        alert.setTitle("QR Code Icompatible");
+        alert.setMessage("Le QR Code scanné ne provient pas d'une requête de Paiement" +
+                " de PRONAPP MOBILE. Rescanner pour continuer.");
+        alert.setHasPositiveButton(true);
+        alert.setBanner(R.drawable.ic_error_outline_black_48dp);
+        alert.setBannerViewColorFilter(Color.RED);
+        alert.setModal(true);
+
+        alert.setPositiveText("RESCANNER");
+        alert.setOnPositiveClickListener(new AlertMessage.OnPositiveClickListener() {
+            @Override
+            public void onPositiveClick() {
+                // relaunch the QR Code Scanning
+                scanQRCode();
+            }
+        });
+
+        alert.setNegativeText("QUITTER");
+        alert.setOnNegativeClickListener(new AlertMessage.OnNegativeClickListener() {
+            @Override
+            public void onNegativeClick() {
+                // Quit Activity
+                MakePaymentActivity.this.finish();
+            }
+        });
+
+        alert.show(this.ivQRCode);
     }
 
     public void loadPaymentViews(String qrCodeEncryptedString) {
@@ -271,10 +325,10 @@ public class MakePaymentActivity extends AppCompatActivity {
             }
         });
 
-        cancelButton.setOnClickListener(new View.OnClickListener() {
+        rescanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                scanQRCode();
             }
         });
 
@@ -356,8 +410,7 @@ public class MakePaymentActivity extends AppCompatActivity {
 
         payButton.setEnabled(true);
 
-        // We close the Fragment
-        cancelButton.callOnClick();
+        finish();
     }
 
     public void resumePayment() {
@@ -377,7 +430,7 @@ public class MakePaymentActivity extends AppCompatActivity {
         alert.setOnDismissListener(new AlertMessage.OnDismissListener() {
             @Override
             public void onDismiss() {
-                Toast.makeText(MakePaymentActivity.this, "Alert Message dismissed", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MakePaymentActivity.this, "Alert Message dismissed", Toast.LENGTH_SHORT).show();
                 MakePaymentActivity.this.finish();
             }
         });
