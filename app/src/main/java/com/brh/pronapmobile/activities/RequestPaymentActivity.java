@@ -206,72 +206,18 @@ public class RequestPaymentActivity extends AppCompatActivity {
         }*/
 
         // ENCRYPT PaymentData JSON String for QR Code
-        /*try {
-
-
-            SecretKey secretKey = Procryptor.generateKey("K83SJKF5JS9PN83SKD340SNC");
-            byte[] jsonBytes = Procryptor.encryptMessage(json, secretKey);
-            Log.d(TAG, "JSON Payment bytes encrypted : " + jsonBytes);
-
-            String jsonEncryptedString = Base64.encodeToString(jsonBytes, Base64.NO_WRAP);
-            Log.d(TAG, "JSON Payment encrypted : " + jsonEncryptedString);
-
-            byte[] jsonEncryptedBytes = Base64.decode(jsonEncryptedString, Base64.NO_WRAP);
-
-
-            String jsonDecrypted = Procryptor.decryptMessage(jsonEncryptedBytes, secretKey);
-            Log.d(TAG, "JSON Payment bytes decrypted : " + jsonDecrypted);
-
-
-            // Generate QR Code
-            Bitmap bitmap = BitmapEncoder.encodeAsBitmap(jsonEncryptedString, SIZE);
-            qrCodeImageView.setImageBitmap(bitmap);
-
-            // hide layout Payment Info
-            LinearLayout llPayment = findViewById(R.id.llPaymentInfo);
-            llPayment.setVisibility(View.GONE);
-
-            // unhide layout QRCode
-            LinearLayout llCode = findViewById(R.id.llPaymentQRCode);
-            llCode.setVisibility(View.VISIBLE);
-
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (InvalidParameterSpecException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        } catch (WriterException e) {
-            e.printStackTrace();
-        }
-
-        */
-
         try {
-            SecretKey secretKey = Procryptor.generateKeyWithHash("K83SJKF5JS9PN83SKD340SNC");
+            SecretKey secretKey = Procryptor.generateKey("K83SJKF5JS9PN83SKD340SNC");
             byte[] jsonBytes = Procryptor.encrypt(json, secretKey);
-            Log.d(TAG, "JSON Payment bytes encrypted : " + jsonBytes);
+            //Log.d(TAG, "JSON Payment bytes encrypted : " + jsonBytes);
 
             String jsonEncryptedString = Base64.encodeToString(jsonBytes, Base64.NO_WRAP);
-            Log.d(TAG, "JSON Payment encrypted : " + jsonEncryptedString);
+            //Log.d(TAG, "JSON Payment encrypted : " + jsonEncryptedString);
 
-            byte[] jsonEncryptedBytes = Base64.decode(jsonEncryptedString, Base64.NO_WRAP);
-
-
-            String jsonDecrypted = Procryptor.decrypt(jsonEncryptedBytes, secretKey);
-            Log.d(TAG, "JSON Payment bytes decrypted : " + jsonDecrypted);
+            // UNCOMMENT TO Test decryption
+            //byte[] jsonEncryptedBytes = Base64.decode(jsonEncryptedString, Base64.NO_WRAP);
+            //String jsonDecrypted = Procryptor.decrypt(jsonEncryptedBytes, secretKey);
+            //Log.d(TAG, "JSON Payment bytes decrypted : " + jsonDecrypted);
 
 
             // Generate QR Code

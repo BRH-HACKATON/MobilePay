@@ -27,9 +27,15 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class Procryptor {
 
-    public static SecretKey generateKey(String secret)
-            throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return new SecretKeySpec(secret.getBytes(), "AES");
+    public static SecretKey generateKey(String key) throws NoSuchAlgorithmException {
+        int keySize = 16;
+
+        // Hash key.
+        byte[] keyBytes = new byte[keySize];
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(key.getBytes());
+        System.arraycopy(md.digest(), 0, keyBytes, 0, keyBytes.length);
+        return new SecretKeySpec(keyBytes, "AES");
     }
 
     public static SecretKey generateAdvancedKey(char[] passphraseOrPin, byte[] salt)
@@ -47,38 +53,6 @@ public class Procryptor {
         SecretKey secretKey = secretKeyFactory.generateSecret(keySpec);
         return secretKey;
     }
-
-    public static SecretKey generateKeyWithHash(String key) throws NoSuchAlgorithmException {
-        int keySize = 16;
-
-        // Hash key.
-        byte[] keyBytes = new byte[keySize];
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        md.update(key.getBytes());
-        System.arraycopy(md.digest(), 0, keyBytes, 0, keyBytes.length);
-        return new SecretKeySpec(keyBytes, "AES");
-    }
-
-    public static byte[] encryptMessage(String message, SecretKey secretKey)
-            throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidParameterSpecException,
-            IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException {
-
-        // Encrypt the Message
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(new byte[16]));
-        return cipher.doFinal(message.getBytes("UTF-8"));
-    }
-
-    public static String decryptMessage(byte[] cipherText, SecretKey secretKey)
-            throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
-            IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException {
-
-        // Decrypt the Message
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(new byte[16]));
-        return new String(cipher.doFinal(cipherText), "UTF-8");
-    }
-
 
     public static byte[] encrypt(String plainText, SecretKey secretKeySpec) throws Exception {
         byte[] clean = plainText.getBytes();

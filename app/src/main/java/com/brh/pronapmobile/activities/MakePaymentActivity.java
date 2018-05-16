@@ -186,20 +186,13 @@ public class MakePaymentActivity extends AppCompatActivity {
         // Change String JSONObject
         try {
             // DECRYPT QR Code to JSON String
-            /*SecretKey secretKey = Procryptor.generateKey("K83SJKF5JS9PN83SKD340SNC");
-            byte[] qrCodeEncryptedBytes = Base64.decode(qrCodeEncryptedString, Base64.NO_WRAP);
-            String qrCodeString = Procryptor.decryptMessage(qrCodeEncryptedBytes, secretKey);
-            Log.d(TAG, "JSON Payment decrypted : " + qrCodeString);*/
-
-            SecretKey secretKey = Procryptor.generateKeyWithHash("K83SJKF5JS9PN83SKD340SNC");
+            SecretKey secretKey = Procryptor.generateKey("K83SJKF5JS9PN83SKD340SNC");
 
             byte[] qrCodeEncryptedBytes = Base64.decode(qrCodeEncryptedString, Base64.NO_WRAP);
-            Log.d(TAG, "JSON Payment encrypted : " + qrCodeEncryptedString);
+            //Log.d(TAG, "JSON Payment encrypted : " + qrCodeEncryptedString);
 
-            byte[] jsonEncryptedBytes = Base64.decode(qrCodeEncryptedBytes, Base64.NO_WRAP);
-
-            String qrCodeString = Procryptor.decrypt(jsonEncryptedBytes, secretKey);
-            Log.d(TAG, "JSON Payment bytes decrypted : " + qrCodeString);
+            String qrCodeString = Procryptor.decrypt(qrCodeEncryptedBytes, secretKey);
+            //Log.d(TAG, "JSON Payment bytes decrypted : " + qrCodeString);
 
             paymentData = new JSONObject(qrCodeString);
             // fill the TextViews with the JSONObject
