@@ -180,18 +180,20 @@ public class AlertMessage {
         //popupWindow.update();
 
         // Using location, the PopupWindow will be displayed right under anchorView
-        popupWindow.showAtLocation(parentView, Gravity.CENTER,
-                location[0], location[1] );
+        if(parentView != null) {
+            popupWindow.showAtLocation(parentView, Gravity.CENTER,
+                    location[0], location[1]);
 
-        // We cannot set PopupWindow animation style with an animation object, so we will hack
-        // background
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                rlBackground.setBackgroundColor(Color.parseColor("#77000000"));
-            }
-        }, 300);
+            // We cannot set PopupWindow animation style with an animation object, so we will hack
+            // background
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    rlBackground.setBackgroundColor(Color.parseColor("#77000000"));
+                }
+            }, 300);
+        }
 
     }
 

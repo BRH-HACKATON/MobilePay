@@ -1,8 +1,10 @@
 package com.brh.pronapmobile.activities;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,12 +15,12 @@ import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
+import android.telephony.SmsMessage;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,16 +34,17 @@ import com.brh.pronapmobile.models.Payment;
 import com.brh.pronapmobile.utils.BitmapEncoder;
 import com.brh.pronapmobile.utils.MiddleItemFinder;
 import com.brh.pronapmobile.utils.Procryptor;
-import com.brh.pronapmobile.utils.SMSUtils;
+import com.brh.pronapmobile.utils.SmsBroadcastReceiver;
+import com.google.gson.Gson;
 import com.google.zxing.WriterException;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import javax.crypto.SecretKey;
 
@@ -316,12 +319,11 @@ public class MakePaymentActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Log card
                 //Log.d(TAG, "Paying using Card : " + aCards.getSelectedItem().getMaskedNumber());
-                // Send SMS to Phone Number
-                //sendSMS();
 
-                // Jump to SMS Payment
-                // TODO : Move the code below after Payment has been confirmed with Debit Card PIN
-                popupPaymentSuccess();
+                // Disable pay button
+                payButton.setEnabled(false);
+
+                confirmCreditCardWithPIN();
             }
         });
 
@@ -345,12 +347,62 @@ public class MakePaymentActivity extends AppCompatActivity {
 
                 paymentData.put("card_number", card.getNumber());
                 paymentData.put("card_holder_name", card.getHolder());
-                paymentData.put("card_expiry_date", card.getHolder());
+                paymentData.put("card_expiry_date", card.getExpiry());
                 paymentData.put("card_cvv", card.getCvv());
+
+
+                // Prepare a special minimized paymentData so that it fits 1 SMS
+                HashMap<String, String> minPaymentData = new HashMap<>();
+                minPaymentData.put("p_code", paymentData.getString("pronapp_code"));
+                minPaymentData.put("c_num", card.getNumber());
+                minPaymentData.put("c_hold", card.getHolder());
+                minPaymentData.put("t_id", paymentData.getString("t_id"));
+
+
+                // Convert HashMap to JSON with Gson
+                Gson gson = new Gson();
+                String json = gson.toJson(minPaymentData);
+                Log.d(TAG, "JSON SMS : " + json);
+
+                // Convert JSON string back to Map.
+                /*Type type = new TypeToken<Map<String, String>>(){}.getType();
+                Map<String, String> map = gson.fromJson(json, type);
+                for (String key : map.keySet()) {
+                    System.out.println("map.get = " + map.get(key));
+                }*/
+
+                // ENCRYPT PaymentData JSON String for SMS Sending
+                SecretKey secretKey = Procryptor.generateKey("K83SJKF5JS9PN83SKD340SNC");
+                byte[] jsonBytes = Procryptor.encrypt(json, secretKey);
+                //Log.d(TAG, "JSON SMS bytes encrypted : " + jsonBytes);
+
+                String jsonEncryptedString = Base64.encodeToString(jsonBytes, Base64.NO_WRAP);
 
                 // Send SMS to BRH phone number and BHR will get this Phone number automatically
                 // TODO : Simulate BRH phone with Dev Phone
-                SMSUtils.sendSMS(this, "+50937567873", paymentData.toString(), true);
+                SmsBroadcastReceiver smsReceiver = new SmsBroadcastReceiver();
+
+                //register for sending and delivery
+                //this.registerReceiver(smsUtils, new IntentFilter(SmsBroadcastReceiver.SENT_SMS_ACTION_NAME));
+                //this.registerReceiver(smsUtils, new IntentFilter(SmsBroadcastReceiver.DELIVERED_SMS_ACTION_NAME));
+
+                // set SMS sent listener
+                smsReceiver.setOnSmsSentListener(new SmsBroadcastReceiver.onSmsSentListener() {
+                    @Override
+                    public void onSmsSent(boolean isSent, @Nullable String message) {
+                        resumePayment();
+
+                        if(isSent) {
+                            Log.d(TAG, message);
+                            onPaymentSuccess();
+                        } else {
+                            alertSMSNotSent(message);
+                        }
+                    }
+                });
+
+                Log.d(TAG, "SMS will be sent to " + paymentData.getString("vendor_phone"));
+                smsReceiver.sendSMS(this, paymentData.getString("vendor_phone"), json);
             }
 
         } catch (Exception e) {
@@ -360,13 +412,9 @@ public class MakePaymentActivity extends AppCompatActivity {
         }
     }
 
-    public void simulateBRHCatchingSMS() {
-        Toast.makeText(this, "BRH va recevoir le SMS!",
-                Toast.LENGTH_LONG).show();
-    }
 
     public void confirmCreditCardWithPIN() {
-        //Toast.makeText(getContext(), "Enter Credit Card PIN to confirm!",
+        //Toast.makeText(this, "Enter Credit Card PIN to confirm!",
         //       Toast.LENGTH_LONG).show();
 
         PinDialogFragment newFragment = PinDialogFragment.newInstance("Confirmer Paiement");
@@ -387,30 +435,36 @@ public class MakePaymentActivity extends AppCompatActivity {
 
             payment.save();
 
+            // Act like BRH Server and send SMS confirmation
+            //sendSMSConfirmationToVendor();
+
+            // Display success popup
+            popupPaymentSuccess();
+
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Erreur : Paiement non sauvegardé!",
                     Toast.LENGTH_LONG).show();
         }
-
-        // Act like BRH Server and send SMS confirmation
-        sendSMSConfirmationToVendor();
     }
 
     public void sendSMSConfirmationToVendor() {
-        // BRH JOB
+        // **** BRH JOB *****
         try {
-            SMSUtils.sendSMS(this, paymentData.getString("vendor_phone"),
-                    "Votre Paiement a été recu de l'acheteur "+paymentData.getString("card_holder_name"), false);
+            SmsBroadcastReceiver smsReceiver = new SmsBroadcastReceiver();
+
+            smsReceiver.sendSMS(this, paymentData.getString("vendor_phone"),
+                    "BRH - Votre Paiement a été recu de l'acheteur "+paymentData.getString("card_holder_name"));
+
+            Log.d(TAG, "SMS will be sent to Vendor phone " + paymentData.getString("vendor_phone"));
+
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Erreur survenue en envoyant le SMS de Confirmation!",
                     Toast.LENGTH_LONG).show();
         }
 
-        payButton.setEnabled(true);
-
-        finish();
+        resumePayment();
     }
 
     public void resumePayment() {
@@ -423,8 +477,7 @@ public class MakePaymentActivity extends AppCompatActivity {
         alert.setTitle("Paiement Effectué");
         alert.setMessage("Votre Paiement a été effectué avec Succès");
         alert.setHasPositiveButton(false);
-        alert.setPositiveText("VALIDER");
-        alert.setNegativeText("QUITTER");
+        alert.setNegativeText("FERMER");
         alert.setModal(false);
 
         alert.setOnDismissListener(new AlertMessage.OnDismissListener() {
@@ -435,6 +488,20 @@ public class MakePaymentActivity extends AppCompatActivity {
             }
         });
 
+        alert.show(ivQRCode);
+    }
+
+    public void alertSMSNotSent(String message) {
+        Log.d(TAG, message);
+
+        AlertMessage alert = new AlertMessage(this);
+        alert.setBanner(R.drawable.ic_error_outline_black_48dp);
+        alert.setBannerViewColorFilter(Color.RED);
+        alert.setTitle("Echec SMS Paiement");
+        alert.setMessage("L'envoi du SMS de paiement a echoué");
+        alert.setHasPositiveButton(false);
+        alert.setNegativeText("FERMER");
+        alert.setModal(false);
         alert.show(ivQRCode);
     }
 }

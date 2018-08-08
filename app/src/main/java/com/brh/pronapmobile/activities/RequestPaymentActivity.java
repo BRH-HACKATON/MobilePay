@@ -30,6 +30,8 @@ import com.brh.pronapmobile.utils.Procryptor;
 import com.google.gson.Gson;
 import com.google.zxing.WriterException;
 
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -37,7 +39,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -185,8 +189,12 @@ public class RequestPaymentActivity extends AppCompatActivity {
             paymentData.put("vendor_routing_number", vendor.getRouting());
             paymentData.put("vendor_phone", vendor.getPhone());
 
+            // put a random transaction id
+            paymentData.put("t_id", String.valueOf((int)(Math.random() * 1000000)));
+
             // to verify QR Code is compatible with the App
             paymentData.put("pronapp_code", "PD$BVQRC");
+
 
         } else {
             Toast.makeText(this, "Aucun Compte BRH n'a été sélectionné!", Toast.LENGTH_LONG).show();
@@ -196,7 +204,7 @@ public class RequestPaymentActivity extends AppCompatActivity {
         // Convert HashMap to JSON with Gson
         Gson gson = new Gson();
         String json = gson.toJson(paymentData);
-        Log.d(TAG, "JSON Payment : " + json);
+        //Log.d(TAG, "JSON Payment : " + json);
 
         // Convert JSON string back to Map.
         /*Type type = new TypeToken<Map<String, String>>(){}.getType();
@@ -231,6 +239,9 @@ public class RequestPaymentActivity extends AppCompatActivity {
             // unhide layout QRCode
             LinearLayout llCode = findViewById(R.id.llPaymentQRCode);
             llCode.setVisibility(View.VISIBLE);
+
+            // Set PaymentData in MainActivity
+            MainActivity.setPendingPaymentData(new JSONObject(json));
 
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

@@ -16,6 +16,8 @@ public class SQLCipherHelperImpl extends SQLCipherOpenHelper {
 
     @Override
     protected String getCipherSecret() {
+        // This is the Password of the Database, we will retrieve online via special secure request
+        // TODO : Replace this password with one from online request with OAuth2.0
         return "HD&#S#JD83LskdiWF01S38Ske93WW@hd%alde#KD79";
     }
 }

@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <application
         android:name=".PronapApplication"
@@ -19,9 +20,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppThemeBasic">
         <receiver
-            android:name=".utils.SMSUtils"
+            android:name=".utils.SmsBroadcastReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
                 <action android:name="SMS_SENT" />
                 <action android:name="SMS_DELIVERED" />

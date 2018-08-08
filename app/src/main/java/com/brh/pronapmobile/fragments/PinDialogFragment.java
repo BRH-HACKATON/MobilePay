@@ -48,8 +48,8 @@ public class PinDialogFragment extends DialogFragment {
 
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        Toast.makeText(getContext(), "Paiement confirmé!", Toast.LENGTH_SHORT).show();
-                        ((MakePaymentActivity)getActivity()).onPaymentSuccess();
+                        //Toast.makeText(getContext(), "Paiement confirmé!", Toast.LENGTH_SHORT).show();
+                        ((MakePaymentActivity)getActivity()).sendSMS();
                     }
                 })
                 .create();

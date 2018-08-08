@@ -1,6 +1,7 @@
 package com.brh.pronapmobile;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.brh.pronapmobile.models.PronapDatabase;
 import com.raizlabs.android.dbflow.config.DatabaseConfig;
@@ -15,9 +16,11 @@ import com.raizlabs.android.dbflow.structure.database.OpenHelper;
  */
 
 public class PronapApplication extends Application {
+
     @Override
     public void onCreate() {
         super.onCreate();
+
         // This instantiates DBFlow (With Database encryption config customize by Keitel)
         FlowManager.init(new FlowConfig.Builder(this)
                 .addDatabaseConfig(
